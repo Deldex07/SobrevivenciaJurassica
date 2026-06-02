@@ -9,5 +9,11 @@ package trabalho.sobrevivenciajurassica.entidades;
  * @author deldex
  */
 public class Personagem {
+    private int vida;
+    private int percepcao;
     
+    public Personagem(int vida, int percepcao){
+        this.vida = vida;
+        this.percepcao = percepcao;
+    }
 }
