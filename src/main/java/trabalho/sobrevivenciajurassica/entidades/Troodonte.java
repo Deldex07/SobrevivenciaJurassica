@@ -8,6 +8,6 @@ package trabalho.sobrevivenciajurassica.entidades;
  *
  * @author deldex
  */
-public class Trodonte extends Dinossauro{
+public class Troodonte extends Dinossauro{
     
 }
