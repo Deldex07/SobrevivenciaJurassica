@@ -4,10 +4,12 @@
  */
 package trabalho.sobrevivenciajurassica.interfaces;
 
+import trabalho.sobrevivenciajurassica.entidades.EntidadeViva;
+
 /**
  *
  * @author deldex
  */
 public interface Atacante {
-    
+    void atacar(EntidadeViva alvo);
 }

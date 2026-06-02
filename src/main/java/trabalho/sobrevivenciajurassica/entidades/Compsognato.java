@@ -9,5 +9,19 @@ package trabalho.sobrevivenciajurassica.entidades;
  * @author deldex
  */
 public class Compsognato extends Dinossauro{
+
+    public Compsognato(int saudeInicial) {
+        super(saudeInicial);
+    }
+
+    @Override
+    public void atacar(Personagem jogador) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void atacar(EntidadeViva alvo) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
 }
