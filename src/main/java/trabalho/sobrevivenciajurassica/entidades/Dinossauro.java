@@ -12,20 +12,14 @@ import trabalho.sobrevivenciajurassica.interfaces.Atacante;
  */
 public abstract class Dinossauro extends EntidadeViva implements Atacante {
     protected int saude;
-    
-    public Dinossauro(int saudeInicial){
-        this.saude = saudeInicial;
-    }
+    public Dinossauro(int saudeInicial, int linha, int coluna, char simbolo) {
+    super(linha, coluna, simbolo);
+    this.saude = saudeInicial;
+}
     
     public int getSaude(){ return this.saude;}
     public void setSaude(int saude){ this.saude = saude; }
     public boolean estaVivo() { return this.saude > 0; }
     
     public void recebeDano(int pontos) { this.saude -= pontos; }
-
-    /**
-     *
-     * @param jogador
-     */
-    public abstract void atacar(Personagem jogador);
 }

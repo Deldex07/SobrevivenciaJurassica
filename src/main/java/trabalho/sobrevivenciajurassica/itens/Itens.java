@@ -1,13 +1,22 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package trabalho.sobrevivenciajurassica.itens;
 
 /**
- *
- * @author deldex
+ * Classe abstrata base para todos os itens do jogo.
+ * Todo item possui um nome e pode ser "usado" pelo personagem.
  */
 public abstract class Itens {
-    
+    protected String nome;
+
+    public Itens(String nome) {
+        this.nome = nome;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public abstract void usar();
+
+    @Override
+    public String toString() { return nome; }
 }

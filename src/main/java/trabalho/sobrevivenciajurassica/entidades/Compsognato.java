@@ -10,13 +10,8 @@ package trabalho.sobrevivenciajurassica.entidades;
  */
 public class Compsognato extends Dinossauro{
 
-    public Compsognato(int saudeInicial) {
-        super(saudeInicial);
-    }
-
-    @Override
-    public void atacar(Personagem jogador) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Compsognato(int saudeInicial, int linha, int coluna, char simbolo) {
+        super(saudeInicial, linha, coluna, simbolo);
     }
 
     @Override

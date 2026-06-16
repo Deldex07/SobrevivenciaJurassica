@@ -1,13 +1,26 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package trabalho.sobrevivenciajurassica.itens;
 
 /**
  *
  * @author deldex
  */
-public abstract class Arma {
+public abstract class Arma extends Itens {
+    protected int danoBase;
+
+    public Arma(String nome, int danoBase) {
+        super(nome);
+        this.danoBase = danoBase;
+    }
     
+    public int getDanoBase() {
+        return danoBase;
+    }
+
+    /**
+     * Calcula e retiorna o dano do ataque
+     * Retorna 0 se errou, 1 se acertou e 2 se critou
+     */
+    public abstract int calcularDanoTotal();
+    /** indica se tem munição e pode ser usada */
+    public abstract boolean podeSerUsada();
 }
