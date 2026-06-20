@@ -3,7 +3,7 @@ package trabalho.sobrevivenciajurassica.entidades;
  Classe inicial para QUALQUER elemento que possa existir no mapa do jogo (jogador, dinossauros, paredes, caixas de suprimentos), pois esses
  elementos são dependentes de linhas, colunas e símbolos (ícones) de identificação.
 */
-abstract class ElementoMapa {
+abstract public class ElementoMapa {
     // Posição no tabuleiro
     protected int linha;
     protected int coluna;
