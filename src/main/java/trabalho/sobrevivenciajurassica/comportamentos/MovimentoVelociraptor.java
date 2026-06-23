@@ -1,4 +1,6 @@
-// Cansei de escrever essa porra, Java é muito verboso e isso me enche o saco.
+// Cansei de escrever essa porra, Java é muito verboso e isso me enche o saco. 
+// Não tenho nem certeza se as outras coisas estãi funcionando da forma como deveriam.
+// Fiz pra funcionar.
 
 package trabalho.sobrevivenciajurassica.comportamentos;
 import trabalho.sobrevivenciajurassica.interfaces.ComportamentoMovimento;
