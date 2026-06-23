@@ -30,7 +30,8 @@ public class Personagem extends EntidadeViva {
     public int getSaudeMaxima() { return saudeMaxima; }
     public boolean estaVivo() { return saude > 0; }
 
-    public void recebeDano(int pontos) {
+    @Override
+    public void receberDano(int pontos) {
         saude = Math.max(0, saude - pontos);
     }
 

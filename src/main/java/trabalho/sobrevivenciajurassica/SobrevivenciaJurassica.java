@@ -28,7 +28,7 @@ public class SobrevivenciaJurassica {
         System.out.println(p.getInventario());
 
         // Testa kit médico
-        p.recebeDano(3);
+        p.receberDano(3);
         System.out.println("Após dano: " + p.getSaude());
 
         p.getInventario().adicionarItem(new KitMedico());
