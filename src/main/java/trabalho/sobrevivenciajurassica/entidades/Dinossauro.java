@@ -1,17 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package trabalho.sobrevivenciajurassica.entidades;
 
 import trabalho.sobrevivenciajurassica.interfaces.Atacante;
 import trabalho.sobrevivenciajurassica.interfaces.ComportamentoMovimento;
+import trabalho.sobrevivenciajurassica.interfaces.Movimentavel;
+import trabalho.sobrevivenciajurassica.logica.Mapa;
 
-/**
- *
- * @author deldex
- */
-public abstract class Dinossauro extends EntidadeViva implements Atacante {
+public abstract class Dinossauro extends EntidadeViva implements Atacante, Movimentavel {
     protected int saude;
     protected ComportamentoMovimento comportamentoMovimento;
     public Dinossauro(int saudeInicial, int linha, int coluna, char simbolo) {
@@ -19,10 +13,37 @@ public abstract class Dinossauro extends EntidadeViva implements Atacante {
     this.saude = saudeInicial;
 }
     @Override
-    public boolean estaVivo() { return this.saude > 0; }
-    @Override
-    public void receberDano(int pontos) { this.saude -= pontos; }
+    public void receberDano(int dano) {
+        saude -= dano;
+        if(saude < 0)
+            saude = 0;
+    }
 
-    public int getSaude(){ return this.saude;}
-    public void setSaude(int saude){ this.saude = saude; }
+    @Override
+    public boolean estaVivo() {
+        return saude > 0;
+    }
+
+    @Override
+    public void mover(Mapa mapa) {
+        if (comportamentoMovimento != null) {
+            comportamentoMovimento.mover(this, mapa);
+        }
+    }
+
+    public int getSaude() {
+        return saude;
+    }
+
+    public void setSaude(int saude) {
+        this.saude = saude;
+    }
+
+    public ComportamentoMovimento getComportamentoMovimento() {
+        return comportamentoMovimento;
+    }
+
+    public void setComportamentoMovimento(ComportamentoMovimento comportamentoMovimento) {
+        this.comportamentoMovimento = comportamentoMovimento;
+    }
 }

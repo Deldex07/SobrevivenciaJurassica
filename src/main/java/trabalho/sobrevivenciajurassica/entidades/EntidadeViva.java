@@ -14,6 +14,6 @@ public abstract class EntidadeViva extends ElementoMapa {
         super(linha, coluna, simbolo);
     }
 
-    public abstract void receberDano(int pontos);
+    public abstract void receberDano(int dano);
     public abstract boolean estaVivo();
 }
