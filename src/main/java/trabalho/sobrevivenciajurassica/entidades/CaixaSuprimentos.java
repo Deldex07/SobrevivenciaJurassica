@@ -1,31 +1,44 @@
 package trabalho.sobrevivenciajurassica.entidades;
+
 import trabalho.sobrevivenciajurassica.itens.*;
 
 public class CaixaSuprimentos extends ElementoMapa {
-    ConteudoCaixa conteudo;
+    private final ConteudoCaixa conteudo;
 
     public CaixaSuprimentos(ConteudoCaixa conteudo, int linha, int coluna, char simbolo) {
         super(linha, coluna, simbolo);
         this.conteudo = conteudo;
     }
 
-    public void abrir(Personagem jogador){
+    public boolean abrir(Personagem jogador) {
         switch (conteudo) {
             case KIT_MEDICO:
-                KitMedico kit = new KitMedico();
-                jogador.getInventario().adicionarItem(kit);
+                jogador.getInventario().adicionarItem(
+                        new KitMedico());
+                System.out.println("Você encontrou um Kit Médico!");
                 break;
+
             case BASTAO_ELETRICO:
-                BastaoEletrico bastao = new BastaoEletrico();
-                jogador.getInventario().adicionarItem(bastao);
+                jogador.getInventario().adicionarItem(
+                        new BastaoEletrico());
+                System.out.println("Você encontrou um Bastão Elétrico!");
                 break;
+
             case DARDOS:
-                Dardos dardos = new Dardos(1);
-                jogador.getInventario().adicionarItem(dardos);
+                jogador.getInventario().adicionarItem(
+                        new Dardos(1));
+                System.out.println("Você encontrou Dardos Tranquilizantes!");
                 break;
+
             case COMPSOGNATO:
-                //combate com compsognato
-                break;
+                System.out.println("A caixa estava vazia...");
+                System.out.println("Um Compsognato apareceu!");
+                return true;
         }
+        return false;
+    }
+
+    public ConteudoCaixa getConteudo() {
+        return conteudo;
     }
 }

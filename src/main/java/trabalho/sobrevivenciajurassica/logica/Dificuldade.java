@@ -1,13 +1,8 @@
 package trabalho.sobrevivenciajurassica.logica;
 
-/**
- * Define os níveis de dificuldade do jogo.
- * Cada nível determina a percepção do jogador e o tamanho do tabuleiro.
- */
 public enum Dificuldade {
-
-    FACIL  ("Fácil",  3, 10),
-    MEDIO  ("Médio",  2, 15),
+    FACIL("Fácil", 3, 10),
+    MEDIO("Médio", 2, 15),
     DIFICIL("Difícil", 1, 20);
 
     private final String nome;
@@ -20,10 +15,20 @@ public enum Dificuldade {
         this.tamanhoMapa = tamanhoMapa;
     }
 
-    public String getNome()       { return nome; }
-    public int getPercepcao()     { return percepcao; }
-    public int getTamanhoMapa()   { return tamanhoMapa; }
+    public String getNome() {
+        return nome;
+    }
+
+    public int getPercepcao() {
+        return percepcao;
+    }
+
+    public int getTamanhoMapa() {
+        return tamanhoMapa;
+    }
 
     @Override
-    public String toString() { return nome; }
+    public String toString() {
+        return nome;
+    }
 }

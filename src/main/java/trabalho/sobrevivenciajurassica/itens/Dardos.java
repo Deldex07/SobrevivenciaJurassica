@@ -19,19 +19,23 @@ public class Dardos extends Arma {
         this.municao += quantidade;
     }
 
-    public int getMunicao() { return municao; }
+    public int getMunicao() { 
+        return municao; }
+
     @Override
     public int calcularDanoTotal() {
         if (!podeSerUsada()) {
-            System.out.println("  [Dardos] Sem munição!");
+            System.out.println("[Dardos] Sem munição!");
             return 0;
         }
         municao--;
-        System.out.println("  [Dardos] Tiro certeiro! Munição restante: " + municao);
+        System.out.println("[Dardos] Tiro certeiro! Munição restante: " + municao);
         return 2; // sempre crítico
     }
     @Override
-    public boolean podeSerUsada() { return municao > 0; }
+    public boolean podeSerUsada() { 
+        return municao > 0;
+    }
 
     @Override
     public void usar() {

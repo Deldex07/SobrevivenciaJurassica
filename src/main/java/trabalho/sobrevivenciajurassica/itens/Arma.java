@@ -1,9 +1,5 @@
 package trabalho.sobrevivenciajurassica.itens;
 
-/**
- *
- * @author deldex
- */
 public abstract class Arma extends Itens {
     protected int danoBase;
 
@@ -17,7 +13,7 @@ public abstract class Arma extends Itens {
     }
 
     /**
-     * Calcula e retiorna o dano do ataque
+     * Calcula e retorna o dano do ataque
      * Retorna 0 se errou, 1 se acertou e 2 se critou
      */
     public abstract int calcularDanoTotal();

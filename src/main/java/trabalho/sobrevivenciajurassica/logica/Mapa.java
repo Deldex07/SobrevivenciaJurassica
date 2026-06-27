@@ -1,133 +1,231 @@
 package trabalho.sobrevivenciajurassica.logica;
 
-import trabalho.sobrevivenciajurassica.entidades.*;
-import trabalho.sobrevivenciajurassica.itens.*;
 import java.util.Random;
+import java.util.Scanner;
+import trabalho.sobrevivenciajurassica.entidades.*;
+import trabalho.sobrevivenciajurassica.itens.ConteudoCaixa;
 
 public class Mapa {
-
     private final int tamanho;
-    private final ElementoMapa[][] grade;      // paredes, caixas, personagem
-    private final Dinossauro[][] dinossauros;  // camada separada para dinossauros
+    private final ElementoMapa[][] grade;
+    private final Dinossauro[][] dinossauros;
     private Personagem personagem;
+    private final GerenciadorCombate gerenciadorCombate;
     private static final Random random = new Random();
 
-    public Mapa(int tamanho) {
+    public Mapa(int tamanho, Scanner scanner) {
         this.tamanho = tamanho;
         this.grade = new ElementoMapa[tamanho][tamanho];
         this.dinossauros = new Dinossauro[tamanho][tamanho];
+        this.gerenciadorCombate = new GerenciadorCombate(scanner);
     }
-
-    // --- Geração ---
 
     public void gerar(Personagem personagem, Dificuldade dificuldade) {
         this.personagem = personagem;
-
-        // Posiciona o personagem no canto superior esquerdo
         grade[0][0] = personagem;
         personagem.setLinha(0);
         personagem.setColuna(0);
 
-        // Gera paredes aleatoriamente (entre 10% e 20% do mapa)
-        int totalCelulas = tamanho * tamanho;
-        int numParedes = totalCelulas / 10 + random.nextInt(totalCelulas / 10);
-        for (int i = 0; i < numParedes; i++) {
-            int l, c;
-            do {
-                l = random.nextInt(tamanho);
-                c = random.nextInt(tamanho);
-            } while (grade[l][c] != null); // não sobrescreve nada
-            grade[l][c] = new Parede(l, c);
+        gerarParedes();
+        posicionarDinossauro(new TiranossauroRex(3, tamanho - 1, tamanho - 1, 'R'), tamanho - 1, tamanho - 1);
+        posicionarDinossauroAleatorio(new Compsognato(1, 0, 0, 'C'));
+        posicionarDinossauroAleatorio(new Compsognato(1, 0, 0, 'C'));
+
+        for (int i = 0; i < 5; i++) {
+            posicionarDinossauroAleatorio(new Troodonte(2, 0, 0, 'T'));
         }
 
-        // Posiciona T-Rex no canto oposto
-        posicionarDinossauro(new TiranossauroRex(3, tamanho - 1, tamanho - 1, 'R'), tamanho - 1, tamanho - 1);
-
-        // Posiciona os outros dinossauros aleatoriamente
-        posicionarDinossauroAleatorio(new Compsognato(1, 0, 0, 'C'));
-        posicionarDinossauroAleatorio(new Compsognato(1, 0, 0, 'C'));
-        posicionarDinossauroAleatorio(new Troodonte(2, 0, 0, 'T'));
-        posicionarDinossauroAleatorio(new Troodonte(2, 0, 0, 'T'));
-        posicionarDinossauroAleatorio(new Troodonte(2, 0, 0, 'T'));
-        posicionarDinossauroAleatorio(new Troodonte(2, 0, 0, 'T'));
-        posicionarDinossauroAleatorio(new Troodonte(2, 0, 0, 'T'));
         posicionarDinossauroAleatorio(new Velociraptor(2, 0, 0, 'V'));
         posicionarDinossauroAleatorio(new Velociraptor(2, 0, 0, 'V'));
-
-        // Posiciona as 4 caixas de suprimentos
         posicionarCaixaAleatoria(ConteudoCaixa.KIT_MEDICO);
         posicionarCaixaAleatoria(ConteudoCaixa.BASTAO_ELETRICO);
         posicionarCaixaAleatoria(ConteudoCaixa.DARDOS);
         posicionarCaixaAleatoria(ConteudoCaixa.COMPSOGNATO);
     }
 
-    private void posicionarDinossauro(Dinossauro dino, int linha, int coluna) {
+    private void gerarParedes() {
+        int total = tamanho * tamanho;
+        int quantidade =
+                total / 10 + random.nextInt(total / 10);
+        for (int i = 0; i < quantidade; i++) {
+            int linha;
+            int coluna;
+
+            do {
+                linha = random.nextInt(tamanho);
+                coluna = random.nextInt(tamanho);
+            } while (grade[linha][coluna] != null);
+            grade[linha][coluna] = new Parede(linha, coluna);
+        }
+    }
+
+    private void posicionarDinossauro(
+            Dinossauro dino,
+            int linha,
+            int coluna) {
+
         dino.setLinha(linha);
         dino.setColuna(coluna);
         dinossauros[linha][coluna] = dino;
     }
 
-    private void posicionarDinossauroAleatorio(Dinossauro dino) {
-        int l, c;
+    private void posicionarDinossauroAleatorio(
+            Dinossauro dino) {
+        int linha;
+        int coluna;
+
         do {
-            l = random.nextInt(tamanho);
-            c = random.nextInt(tamanho);
-        } while (grade[l][c] != null || dinossauros[l][c] != null || (l == 0 && c == 0));
-        posicionarDinossauro(dino, l, c);
+            linha = random.nextInt(tamanho);
+            coluna = random.nextInt(tamanho);
+        } while (grade[linha][coluna] != null || dinossauros[linha][coluna] != null || (linha == 0 && coluna == 0));
+        posicionarDinossauro(dino, linha, coluna);
     }
 
-    private void posicionarCaixaAleatoria(ConteudoCaixa conteudo) {
-        int l, c;
+    private void posicionarCaixaAleatoria(
+            ConteudoCaixa conteudo) {
+        int linha;
+        int coluna;
+
         do {
-            l = random.nextInt(tamanho);
-            c = random.nextInt(tamanho);
-        } while (grade[l][c] != null || (l == 0 && c == 0));
-        grade[l][c] = new CaixaSuprimentos(conteudo, l, c, 'X');
+            linha = random.nextInt(tamanho);
+            coluna = random.nextInt(tamanho);
+        } while (grade[linha][coluna] != null || (linha == 0 && coluna == 0));
+        grade[linha][coluna] = new CaixaSuprimentos(conteudo, linha, coluna, 'X');
     }
 
-    public void moverDinossauro(Dinossauro dino, int novaLinha, int novaColuna) {
-        dinossauros[dino.getLinha()][dino.getColuna()] = null; // limpa posição antiga
-        dino.moverPara(novaLinha, novaColuna);                 // atualiza o objeto
-        dinossauros[novaLinha][novaColuna] = dino;             // marca nova posição
+    public void moverDinossauro(
+            Dinossauro dino,
+            int novaLinha,
+            int novaColuna) {
+
+        dinossauros[dino.getLinha()][dino.getColuna()] = null;
+        dino.moverPara(novaLinha, novaColuna);
+        dinossauros[novaLinha][novaColuna] = dino;
     }
 
-    // --- Impressão ---
+    public boolean moverPersonagem(int novaLinha, int novaColuna) {
+        if (!dentroDosLimites(novaLinha, novaColuna)) {
+            System.out.println("Você não pode sair do mapa.");
+            return false;
+        }
+
+        if (grade[novaLinha][novaColuna] instanceof Parede) {
+            System.out.println("Há uma parede nessa posição.");
+            return false;
+        }
+
+        Dinossauro dino = dinossauros[novaLinha][novaColuna];
+        if (dino != null) {
+            boolean venceu = gerenciadorCombate.iniciarCombate(personagem, dino);
+            if (!venceu) {
+                return false;
+            }
+
+            if (!dino.estaVivo()) {
+                dinossauros[novaLinha][novaColuna] = null;
+            }
+        }
+
+        ElementoMapa elemento = grade[novaLinha][novaColuna];
+        if (elemento instanceof CaixaSuprimentos caixa) {
+            System.out.println("Você encontrou uma caixa de suprimentos!");
+
+            boolean apareceuCompsognato = caixa.abrir(personagem);
+            grade[novaLinha][novaColuna] = null;
+
+            if (apareceuCompsognato) {
+                Compsognato compsognato = new Compsognato(1, novaLinha, novaColuna, 'C');
+                boolean venceu = gerenciadorCombate.iniciarCombate(personagem, compsognato);
+                if (!venceu) {
+                    return false;
+                }
+            }
+        }
+
+        grade[personagem.getLinha()][personagem.getColuna()] = null;
+        personagem.moverPara(novaLinha, novaColuna);
+        grade[novaLinha][novaColuna] = personagem;
+        return true;
+    }
+
+    public void moverDinossauros() {
+        Dinossauro[][] copia = new Dinossauro[tamanho][tamanho];
+
+        for (int i = 0; i < tamanho; i++) {
+            for (int j = 0; j < tamanho; j++) {
+                copia[i][j] = dinossauros[i][j];
+            }
+        }
+
+        for (int i = 0; i < tamanho; i++) {
+            for (int j = 0; j < tamanho; j++) {
+                Dinossauro dino = copia[i][j];
+                if (dino != null && dino.estaVivo()) {
+                    dino.mover(this);
+                }
+            }
+        }
+    }
+
+    public boolean existeDinossauro(int linha, int coluna) {
+        return dinossauros[linha][coluna] != null;
+    }
+
+    public boolean existeParede(int linha, int coluna) {
+        return grade[linha][coluna] instanceof Parede;
+    }
+
+    public boolean existeCaixa(int linha, int coluna) {
+        return grade[linha][coluna] instanceof CaixaSuprimentos;
+    }
+
+    public boolean venceu() {
+        return personagem.getLinha() == tamanho - 1 && personagem.getColuna() == tamanho - 1;
+    }
+
+    public boolean perdeu() {
+        return !personagem.estaVivo();
+    }
 
     public void imprimir(boolean debug) {
         System.out.print("   ");
+
         for (int c = 0; c < tamanho; c++) {
             System.out.printf("%2d ", c + 1);
         }
-        System.out.println();
 
+        System.out.println();
         for (int l = 0; l < tamanho; l++) {
             System.out.printf("%c  ", (char) ('A' + l));
+
             for (int c = 0; c < tamanho; c++) {
                 char simbolo = '.';
-
                 if (grade[l][c] != null) {
                     simbolo = grade[l][c].getSimbolo();
                 }
 
-                // Dinossauro tem prioridade visual se debug ativo
-                if (dinossauros[l][c] != null && (debug || estaNoVision(l, c))) {
+                if (dinossauros[l][c] != null && (debug || estaNaLinhaDeVisao(l, c))) {
                     simbolo = dinossauros[l][c].getSimbolo();
                 }
 
                 System.out.printf("%c  ", simbolo);
             }
+
             System.out.println();
         }
     }
 
-    private boolean estaNoVision(int linha, int coluna) {
-        // Linha de visão horizontal e vertical a partir do personagem
+    private boolean estaNaLinhaDeVisao(int linha, int coluna) {
         return linha == personagem.getLinha() || coluna == personagem.getColuna();
     }
 
-    // --- Acesso ---
+    public int getTamanho() {
+        return tamanho;
+    }
 
-    public int getTamanho() { return tamanho; }
+    public Personagem getPersonagem() {
+        return personagem;
+    }
 
     public ElementoMapa getElemento(int linha, int coluna) {
         return grade[linha][coluna];
@@ -137,16 +235,12 @@ public class Mapa {
         return dinossauros[linha][coluna];
     }
 
-    public Personagem getPersonagem() {
-        return personagem;
-    }
-
     public void setElemento(int linha, int coluna, ElementoMapa elemento) {
         grade[linha][coluna] = elemento;
     }
 
-    public void setDinossauro(int linha, int coluna, Dinossauro dino) {
-        dinossauros[linha][coluna] = dino;
+    public void setDinossauro(int linha, int coluna, Dinossauro dinossauro) {
+        dinossauros[linha][coluna] = dinossauro;
     }
 
     public boolean dentroDosLimites(int linha, int coluna) {
@@ -154,8 +248,6 @@ public class Mapa {
     }
 
     public boolean posicaoLivre(int linha, int coluna) {
-        return dentroDosLimites(linha, coluna)
-            && !(grade[linha][coluna] instanceof Parede)
-            && dinossauros[linha][coluna] == null;
+        return dentroDosLimites(linha, coluna) && !(grade[linha][coluna] instanceof Parede) && dinossauros[linha][coluna] == null;
     }
 }
