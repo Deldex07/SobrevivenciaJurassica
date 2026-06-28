@@ -5,7 +5,7 @@
 package trabalho.sobrevivenciajurassica.entidades;
 import trabalho.sobrevivenciajurassica.comportamentos.MovimentoPerseguidor;
 /**
- *
+ * Representa um Troodonte, um dinossauro ágil e inteligente.
  * @author deldex
  */
 public class Troodonte extends Dinossauro{

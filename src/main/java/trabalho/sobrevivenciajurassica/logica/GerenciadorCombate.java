@@ -8,6 +8,10 @@ import trabalho.sobrevivenciajurassica.itens.Arma;
 import trabalho.sobrevivenciajurassica.itens.Dardos;
 import trabalho.sobrevivenciajurassica.itens.Inventario;
 
+/**
+ * Classe responsável por gerenciar o combate entre o jogador e os dinossauros.
+ */
+
 public class GerenciadorCombate {
     private final Scanner scanner;
     public GerenciadorCombate(Scanner scanner) {

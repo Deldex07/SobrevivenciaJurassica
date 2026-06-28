@@ -3,6 +3,10 @@ package trabalho.sobrevivenciajurassica.logica;
 import java.util.Scanner;
 import trabalho.sobrevivenciajurassica.entidades.Personagem;
 
+/**
+ * Classe responsável por gerenciar o jogo, incluindo a escolha da dificuldade, criação do mapa e execução do loop principal do jogo.
+ * GerenciadorJogo
+ */
 public class GerenciadorJogo {
     private final Scanner scanner;
     private Dificuldade dificuldade;

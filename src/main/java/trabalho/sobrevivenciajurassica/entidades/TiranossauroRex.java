@@ -5,7 +5,8 @@
 package trabalho.sobrevivenciajurassica.entidades;
 import trabalho.sobrevivenciajurassica.comportamentos.MovimentoParado;
 /**
- *
+ * Representa um Tiranossauro Rex, um dinossauro grande e poderoso.
+ * TiranossauroRex
  * @author deldex
  */
 public class TiranossauroRex extends Dinossauro {

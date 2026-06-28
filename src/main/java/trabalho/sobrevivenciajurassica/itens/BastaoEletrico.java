@@ -1,7 +1,7 @@
 package trabalho.sobrevivenciajurassica.itens;
 import trabalho.sobrevivenciajurassica.logica.Dado;
 /**
- * Bastão elétrico: substitui o soco ao ser adquirido.
+ * Bastão elétrico: dá a capacidade de atacar inimigos com bastão ou soco.
  * Dado de 6 lados: 1 = erra | 2-5 = dano 1 | 6 = crítico (dano 2).
  */
 public class BastaoEletrico extends Arma {
@@ -26,6 +26,6 @@ public class BastaoEletrico extends Arma {
 
     @Override
     public void usar() {
-        // efeito de uso passivo — dano calculado via calcularDano()
+        // efeito de uso passivo — dano calculado via calcularDanoTotal()
     }
 }

@@ -1,5 +1,8 @@
 package trabalho.sobrevivenciajurassica.itens;
-
+/**
+ * Representa uma arma que pode ser usada para atacar outros dinossauros.
+ * Arma
+ */
 public abstract class Arma extends Itens {
     protected int danoBase;
 

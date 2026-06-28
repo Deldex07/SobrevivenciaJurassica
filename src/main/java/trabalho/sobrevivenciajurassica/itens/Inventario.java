@@ -3,6 +3,11 @@ package trabalho.sobrevivenciajurassica.itens;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Classe que representa o inventário do jogador, contendo os itens coletados durante o jogo.
+ * Inventario
+ */
+
 public class Inventario {
      private final List<Itens> itens;
     

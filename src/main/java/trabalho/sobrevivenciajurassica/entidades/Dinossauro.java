@@ -5,6 +5,11 @@ import trabalho.sobrevivenciajurassica.interfaces.ComportamentoMovimento;
 import trabalho.sobrevivenciajurassica.interfaces.Movimentavel;
 import trabalho.sobrevivenciajurassica.logica.Mapa;
 
+
+/**
+ * Dinossauro
+ * Classe abstrata que representa um dinossauro no jogo. Um dinossauro é uma entidade viva que pode atacar e se mover.
+ */
 public abstract class Dinossauro extends EntidadeViva implements Atacante, Movimentavel {
     protected int saude;
     protected ComportamentoMovimento comportamentoMovimento;

@@ -4,7 +4,10 @@ import trabalho.sobrevivenciajurassica.interfaces.ComportamentoMovimento;
 import trabalho.sobrevivenciajurassica.entidades.Dinossauro;
 import trabalho.sobrevivenciajurassica.logica.Mapa;
 import trabalho.sobrevivenciajurassica.entidades.Personagem;
-
+/**
+ * Movimentação do Velociraptor, que se move aleatoriamente.
+ * MovimentoVelociraptor
+ */
 public class MovimentoVelociraptor implements ComportamentoMovimento {
     @Override
     public void mover(Dinossauro dino, Mapa mapa) {

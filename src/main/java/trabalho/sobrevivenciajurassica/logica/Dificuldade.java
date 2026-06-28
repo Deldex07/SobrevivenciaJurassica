@@ -1,5 +1,8 @@
 package trabalho.sobrevivenciajurassica.logica;
-
+/**
+ * Classe que representa a dificuldade do jogo. Ela altera a percepção do jogador e o tamanho do mapa.
+ * Dificuldade
+ */
 public enum Dificuldade {
     FACIL("Fácil", 3, 10),
     MEDIO("Médio", 2, 15),

@@ -7,7 +7,7 @@ package trabalho.sobrevivenciajurassica.interfaces;
 import trabalho.sobrevivenciajurassica.entidades.EntidadeViva;
 
 /**
- *
+ * Interface que define o comportamento de ataque para entidades vivas.
  * @author deldex
  */
 public interface Atacante {

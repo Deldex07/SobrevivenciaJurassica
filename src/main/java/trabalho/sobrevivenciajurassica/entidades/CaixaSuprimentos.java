@@ -1,7 +1,10 @@
 package trabalho.sobrevivenciajurassica.entidades;
 
 import trabalho.sobrevivenciajurassica.itens.*;
-
+/**
+ * Representa uma caixa de suprimentos que pode conter diferentes itens.
+ * CaixaSuprimentos
+ */
 public class CaixaSuprimentos extends ElementoMapa {
     private final ConteudoCaixa conteudo;
 

@@ -5,6 +5,11 @@ import java.util.Scanner;
 import trabalho.sobrevivenciajurassica.entidades.*;
 import trabalho.sobrevivenciajurassica.itens.ConteudoCaixa;
 
+/**
+ * Classe que representa o mapa do jogo, incluindo a grade de elementos, os dinossauros e o personagem. 
+ * Ela é responsável por gerar o mapa, mover os dinossauros e o personagem, e verificar as condições de vitória e derrota.
+ * Mapa
+ */
 public class Mapa {
     private final int tamanho;
     private final ElementoMapa[][] grade;
