@@ -253,6 +253,13 @@ public class Mapa {
     }
 
     public boolean posicaoLivre(int linha, int coluna) {
-        return dentroDosLimites(linha, coluna) && !(grade[linha][coluna] instanceof Parede) && dinossauros[linha][coluna] == null;
+        boolean ehPosicaoDoPersonagem = personagem != null
+                && personagem.getLinha() == linha
+                && personagem.getColuna() == coluna;
+
+        return dentroDosLimites(linha, coluna)
+                && !(grade[linha][coluna] instanceof Parede)
+                && dinossauros[linha][coluna] == null
+                && !ehPosicaoDoPersonagem;
     }
 }
