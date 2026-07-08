@@ -1,5 +1,8 @@
 package trabalho.sobrevivenciajurassica.ui;
 
-public class TiranossauroRexUI {
+import trabalho.sobrevivenciajurassica.entidades.TiranossauroRex;
+import javax.swing.*;
+import java.awt.*;
+public class TiranossauroRexUI extends TiranossauroRex {
     
 }

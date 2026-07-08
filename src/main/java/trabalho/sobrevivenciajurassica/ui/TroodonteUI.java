@@ -1,5 +1,8 @@
 package trabalho.sobrevivenciajurassica.ui;
 
-public class TroodonteUI {
+import trabalho.sobrevivenciajurassica.entidades.Troodonte;
+import javax.swing.*;
+import java.awt.*;
+public class TroodonteUI extends Troodonte {
     
 }

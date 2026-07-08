@@ -1,5 +1,8 @@
 package trabalho.sobrevivenciajurassica.ui;
 
-public class ParedeUI {
+import trabalho.sobrevivenciajurassica.entidades.Parede;
+import javax.swing.*;
+import java.awt.*;
+public class ParedeUI extends Parede{
     
 }

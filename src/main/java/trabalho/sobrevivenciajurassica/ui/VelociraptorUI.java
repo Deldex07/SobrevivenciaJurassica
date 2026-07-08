@@ -1,5 +1,8 @@
 package trabalho.sobrevivenciajurassica.ui;
 
-public class VelociraptorUI {
+import trabalho.sobrevivenciajurassica.entidades.Velociraptor;
+import javax.swing.*;
+import java.awt.*;
+public class VelociraptorUI extends Velociraptor {
     
 }

@@ -1,5 +1,8 @@
 package trabalho.sobrevivenciajurassica.ui;
 
-public class CaixaSuprimentosUI {
+import trabalho.sobrevivenciajurassica.entidades.CaixaSuprimentos;
+import javax.swing.*;
+import java.awt.*;
+public class CaixaSuprimentosUI extends CaixaSuprimentos {
     
 }

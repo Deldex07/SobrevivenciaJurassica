@@ -1,5 +1,8 @@
 package trabalho.sobrevivenciajurassica.ui;
 
-public class PersonagemUI {
+import trabalho.sobrevivenciajurassica.entidades.Personagem;
+import javax.swing.*;
+import java.awt.*;
+public class PersonagemUI extends Personagem {
     
 }

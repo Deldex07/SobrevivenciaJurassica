@@ -1,5 +1,8 @@
 package trabalho.sobrevivenciajurassica.ui;
 
-public class CompsognatoUI {
+import trabalho.sobrevivenciajurassica.entidades.Compsognato;
+import javax.swing.*;
+import java.awt.*;
+public class CompsognatoUI extends Compsognato {
     
 }

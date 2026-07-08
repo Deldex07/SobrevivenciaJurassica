@@ -1,5 +1,8 @@
 package trabalho.sobrevivenciajurassica.ui;
 
-public class MapaUI {
+import trabalho.sobrevivenciajurassica.logica.Mapa;
+import javax.swing.*;
+import java.awt.*;
+public class MapaUI extends Mapa{
     
 }
