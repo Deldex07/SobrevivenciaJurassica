@@ -2,6 +2,7 @@ package trabalho.sobrevivenciajurassica.logica;
 
 import java.util.Random;
 import java.util.Scanner;
+import java.io.IOException;
 import trabalho.sobrevivenciajurassica.entidades.*;
 import trabalho.sobrevivenciajurassica.itens.ConteudoCaixa;
 
@@ -12,11 +13,11 @@ import trabalho.sobrevivenciajurassica.itens.ConteudoCaixa;
  */
 public class Mapa {
     private final int tamanho;
-    private final ElementoMapa[][] grade;
+    protected final ElementoMapa[][] grade;
     private final Dinossauro[][] dinossauros;
-    private Personagem personagem;
+    protected Personagem personagem;
     private final GerenciadorCombate gerenciadorCombate;
-    private static final Random random = new Random();
+    protected static final Random random = new Random();
 
     public Mapa(int tamanho, Scanner scanner) {
         this.tamanho = tamanho;
@@ -25,7 +26,7 @@ public class Mapa {
         this.gerenciadorCombate = new GerenciadorCombate(scanner);
     }
 
-    public void gerar(Personagem personagem, Dificuldade dificuldade) {
+    public void gerar(Personagem personagem, Dificuldade dificuldade) throws IOException {
         this.personagem = personagem;
         grade[0][0] = personagem;
         personagem.setLinha(0);
@@ -48,7 +49,7 @@ public class Mapa {
         posicionarCaixaAleatoria(ConteudoCaixa.COMPSOGNATO);
     }
 
-    private void gerarParedes() {
+    protected void gerarParedes() {
         int total = tamanho * tamanho;
         int quantidade =
                 total / 10 + random.nextInt(total / 10);
@@ -64,18 +65,14 @@ public class Mapa {
         }
     }
 
-    private void posicionarDinossauro(
-            Dinossauro dino,
-            int linha,
-            int coluna) {
+    protected void posicionarDinossauro(Dinossauro dino, int linha, int coluna) {
 
         dino.setLinha(linha);
         dino.setColuna(coluna);
         dinossauros[linha][coluna] = dino;
     }
 
-    private void posicionarDinossauroAleatorio(
-            Dinossauro dino) {
+    protected void posicionarDinossauroAleatorio(Dinossauro dino) {
         int linha;
         int coluna;
 
@@ -86,8 +83,7 @@ public class Mapa {
         posicionarDinossauro(dino, linha, coluna);
     }
 
-    private void posicionarCaixaAleatoria(
-            ConteudoCaixa conteudo) {
+    protected void posicionarCaixaAleatoria( ConteudoCaixa conteudo ) throws IOException {
         int linha;
         int coluna;
 
@@ -98,10 +94,7 @@ public class Mapa {
         grade[linha][coluna] = new CaixaSuprimentos(conteudo, linha, coluna, 'X');
     }
 
-    public void moverDinossauro(
-            Dinossauro dino,
-            int novaLinha,
-            int novaColuna) {
+    public void moverDinossauro( Dinossauro dino, int novaLinha, int novaColuna) {
 
         dinossauros[dino.getLinha()][dino.getColuna()] = null;
         dino.moverPara(novaLinha, novaColuna);

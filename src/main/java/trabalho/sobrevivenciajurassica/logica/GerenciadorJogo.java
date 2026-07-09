@@ -1,6 +1,7 @@
 package trabalho.sobrevivenciajurassica.logica;
 
 import java.util.Scanner;
+import java.io.IOException;
 import trabalho.sobrevivenciajurassica.entidades.Personagem;
 
 /**
@@ -18,7 +19,7 @@ public class GerenciadorJogo {
         scanner = new Scanner(System.in);
     }
 
-    public void iniciarJogo() {
+    public void iniciarJogo() throws IOException {
         System.out.println("======================================");
         System.out.println("      SOBREVIVÊNCIA JURÁSSICA");
         System.out.println("======================================");
@@ -70,7 +71,7 @@ public class GerenciadorJogo {
         debug = resposta.equalsIgnoreCase("S");
     }
 
-    private void criarJogo() {
+    private void criarJogo() throws IOException {
         jogador = new Personagem(
                 0,
                 0,
