@@ -8,27 +8,20 @@ import trabalho.sobrevivenciajurassica.logica.Mapa;
  */
 public class MovimentoPerseguidor implements ComportamentoMovimento {
     @Override
-    public void mover(Dinossauro dino, Mapa mapa) {
-        int linha = dino.getLinha();
-        int coluna = dino.getColuna();
-        int linhaJogador = mapa.getPersonagem().getLinha();
-        int colunaJogador = mapa.getPersonagem().getColuna();
+public void mover(Dinossauro dino, Mapa mapa) {
+    int linha = dino.getLinha();
+    int coluna = dino.getColuna();
+    int linhaJogador = mapa.getPersonagem().getLinha();
+    int colunaJogador = mapa.getPersonagem().getColuna();
 
-        if (linha < linhaJogador) {
-            if (mapa.posicaoLivre(linha + 1, coluna))
-                mapa.moverDinossauro(dino, linha + 1, coluna);
-        }
-        else if (linha > linhaJogador) {
-            if (mapa.posicaoLivre(linha - 1, coluna))
-                mapa.moverDinossauro(dino, linha - 1, coluna);
-        }
-        else if (coluna < colunaJogador) {
-            if (mapa.posicaoLivre(linha, coluna + 1))
-                mapa.moverDinossauro(dino, linha, coluna + 1);
-        }
-        else if (coluna > colunaJogador) {
-            if (mapa.posicaoLivre(linha, coluna - 1))
-                mapa.moverDinossauro(dino, linha, coluna - 1);
-        }
+    if (linha < linhaJogador) {
+        mapa.tentarMoverDinossauro(dino, linha + 1, coluna);
+    } else if (linha > linhaJogador) {
+        mapa.tentarMoverDinossauro(dino, linha - 1, coluna);
+    } else if (coluna < colunaJogador) {
+        mapa.tentarMoverDinossauro(dino, linha, coluna + 1);
+    } else if (coluna > colunaJogador) {
+        mapa.tentarMoverDinossauro(dino, linha, coluna - 1);
     }
+}
 }

@@ -9,19 +9,15 @@ import trabalho.sobrevivenciajurassica.logica.Mapa;
 public class MovimentoAleatorio implements ComportamentoMovimento {
     @Override
     public void mover(Dinossauro dino, Mapa mapa) {
-        int direcao = (int)(Math.random() * 4); // 0: cima, 1: baixo, 2: esquerda, 3: direita
+        int direcao = (int)(Math.random() * 4);
         int linha = dino.getLinha();
         int coluna = dino.getColuna();
-
         switch (direcao) {
-            case 0: linha--; break; // cima
-            case 1: linha++; break; // baixo
-            case 2: coluna--; break; // esquerda
-            case 3: coluna++; break; // direita
+            case 0: linha--; break;
+            case 1: linha++; break;
+            case 2: coluna--; break;
+            case 3: coluna++; break;
         }
-
-        if (mapa.posicaoLivre(linha, coluna)) {
-            mapa.moverDinossauro(dino, linha, coluna);
-        }
+        mapa.tentarMoverDinossauro(dino, linha, coluna);
     }
 }
