@@ -17,13 +17,17 @@ public class Mapa {
     private final Dinossauro[][] dinossauros;
     protected Personagem personagem;
     private final GerenciadorCombate gerenciadorCombate;
-    protected static final Random random = new Random();
+    protected final Random random;
 
     public Mapa(int tamanho, Scanner scanner) {
+        this(tamanho, scanner, new Random().nextLong());
+    }
+    public Mapa(int tamanho, Scanner scanner, long seed) {
         this.tamanho = tamanho;
         this.grade = new ElementoMapa[tamanho][tamanho];
         this.dinossauros = new Dinossauro[tamanho][tamanho];
         this.gerenciadorCombate = new GerenciadorCombate(scanner);
+        this.random = new Random(seed);
     }
 
     public void gerar(Personagem personagem, Dificuldade dificuldade) throws IOException {
@@ -100,6 +104,25 @@ public class Mapa {
         dino.moverPara(novaLinha, novaColuna);
         dinossauros[novaLinha][novaColuna] = dino;
     }
+
+    public boolean tentarMoverDinossauro(Dinossauro dino, int novaLinha, int novaColuna) {
+    if (!dentroDosLimites(novaLinha, novaColuna)) {
+        return false;
+    }
+    if (grade[novaLinha][novaColuna] instanceof Parede) {
+        return false;
+    }
+    if (dinossauros[novaLinha][novaColuna] != null) {
+        return false;
+    }
+    if (personagem.getLinha() == novaLinha && personagem.getColuna() == novaColuna) {
+        gerenciadorCombate.iniciarCombate(personagem, dino, true); // dinossauro ataca primeiro
+        return true;
+    }
+
+    moverDinossauro(dino, novaLinha, novaColuna);
+    return true;
+}
 
     public boolean moverPersonagem(int novaLinha, int novaColuna) {
         if (!dentroDosLimites(novaLinha, novaColuna)) {

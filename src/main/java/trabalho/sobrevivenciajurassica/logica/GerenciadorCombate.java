@@ -19,33 +19,47 @@ public class GerenciadorCombate {
     }
 
     public boolean iniciarCombate(Personagem jogador, Dinossauro inimigo) {
+    return iniciarCombate(jogador, inimigo, false);
+}
 
+public boolean iniciarCombate(Personagem jogador, Dinossauro inimigo, boolean inimigoAtacaPrimeiro) {
+
+    System.out.println();
+    System.out.println("================================");
+    System.out.println("Combate iniciado!");
+    System.out.println("Inimigo: " + inimigo.getClass().getSimpleName());
+    System.out.println("================================");
+
+    if (inimigoAtacaPrimeiro) {
         System.out.println();
-        System.out.println("================================");
-        System.out.println("Combate iniciado!");
-        System.out.println("Inimigo: " + inimigo.getClass().getSimpleName());
-        System.out.println("================================");
-
-        while (jogador.estaVivo() && inimigo.estaVivo()) {
-
-            if (turnoJogador(jogador, inimigo)) {
-                System.out.println("Você conseguiu fugir!");
-                return true;
-            }
-
-            if (!inimigo.estaVivo()) {
-                System.out.println("Você derrotou o dinossauro!");
-                return true;
-            }
-
-            turnoDinossauro(jogador, inimigo);
-            if (!jogador.estaVivo()) {
-                System.out.println("Você morreu.");
-                return false;
-            }
+        System.out.println("O dinossauro te encontrou e ataca primeiro!");
+        turnoDinossauro(jogador, inimigo);
+        if (!jogador.estaVivo()) {
+            System.out.println("Você morreu.");
+            return false;
         }
-        return jogador.estaVivo();
     }
+
+    while (jogador.estaVivo() && inimigo.estaVivo()) {
+
+        if (turnoJogador(jogador, inimigo)) {
+            System.out.println("Você conseguiu fugir!");
+            return true;
+        }
+
+        if (!inimigo.estaVivo()) {
+            System.out.println("Você derrotou o dinossauro!");
+            return true;
+        }
+
+        turnoDinossauro(jogador, inimigo);
+        if (!jogador.estaVivo()) {
+            System.out.println("Você morreu.");
+            return false;
+        }
+    }
+    return jogador.estaVivo();
+}
 
     private boolean turnoJogador(Personagem jogador, Dinossauro inimigo) {
         Inventario inventario = jogador.getInventario();

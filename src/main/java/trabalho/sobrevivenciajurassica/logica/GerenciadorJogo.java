@@ -5,7 +5,9 @@ import java.io.IOException;
 import trabalho.sobrevivenciajurassica.entidades.Personagem;
 
 /**
- * Classe responsável por gerenciar o jogo, incluindo a escolha da dificuldade, criação do mapa e execução do loop principal do jogo.
+ * Classe responsável por gerenciar o jogo, incluindo o menu principal, escolha
+ * da dificuldade, criação do mapa, execução do loop principal e o menu de
+ * fim de jogo (reiniciar / novo jogo).
  * GerenciadorJogo
  */
 public class GerenciadorJogo {
@@ -14,6 +16,7 @@ public class GerenciadorJogo {
     private Mapa mapa;
     private Personagem jogador;
     private boolean debug;
+    private long seedAtual;
 
     public GerenciadorJogo() {
         scanner = new Scanner(System.in);
@@ -23,45 +26,91 @@ public class GerenciadorJogo {
         System.out.println("======================================");
         System.out.println("      SOBREVIVÊNCIA JURÁSSICA");
         System.out.println("======================================");
-        System.out.println();
 
-        escolherDificuldade();
-        escolherModoDebug();
-        criarJogo();
-        System.out.println();
-        System.out.println("Jogo iniciado!");
-        executarJogo();
+        menuPrincipal();
     }
 
-    private void escolherDificuldade() {
-        int opcao;
-        do {
+    private void menuPrincipal() throws IOException {
+        boolean sair = false;
+
+        while (!sair) {
             System.out.println();
-            System.out.println("Escolha a dificuldade:");
-            System.out.println("1 - Fácil");
-            System.out.println("2 - Médio");
-            System.out.println("3 - Difícil");
+            System.out.println("1 - Jogar");
+            System.out.println("2 - Sair");
             System.out.print("Opção: ");
-            opcao = scanner.nextInt();
-            switch (opcao) {
-                case 1:
-                    dificuldade = Dificuldade.FACIL;
-                    break;
+            int opcao = lerOpcao(1, 2);
 
-                case 2:
-                    dificuldade = Dificuldade.MEDIO;
-                    break;
-
-                case 3:
-                    dificuldade = Dificuldade.DIFICIL;
-                    break;
-
-                default:
-                    System.out.println("Opção inválida.");
+            if (opcao == 1) {
+                jogarNovaPartida();
+            } else {
+                sair = true;
             }
         }
 
-        while (opcao < 1 || opcao > 3);
+        encerrar();
+    }
+
+    /**
+     * Cuida de uma "sessão" de jogo: escolhe dificuldade e debug uma vez,
+     * depois fica em loop entre jogar/reiniciar até o jogador escolher
+     * "Novo Jogo" (o que devolve o controle para o menu principal).
+     */
+    private void jogarNovaPartida() throws IOException {
+        escolherDificuldade();
+        escolherModoDebug();
+        seedAtual = System.nanoTime(); // define o mapa desta sessão
+
+        boolean voltarAoMenuPrincipal = false;
+        while (!voltarAoMenuPrincipal) {
+            criarJogo(seedAtual);
+            System.out.println();
+            System.out.println("Jogo iniciado!");
+            executarJogo();
+
+            int opcao = menuFimDeJogo();
+            if (opcao == 1) {
+                // Reiniciar Jogo: mesma dificuldade e mesma seed -> mesmo mapa
+                System.out.println();
+                System.out.println("Reiniciando com o mesmo mapa...");
+            } else {
+                voltarAoMenuPrincipal = true; // Novo Jogo
+            }
+        }
+    }
+
+    private int menuFimDeJogo() {
+        System.out.println();
+        System.out.println("1 - Reiniciar Jogo");
+        System.out.println("2 - Novo Jogo");
+        System.out.print("Opção: ");
+        return lerOpcao(1, 2);
+    }
+
+    private int lerOpcao(int min, int max) {
+        int opcao;
+        do {
+            opcao = scanner.nextInt();
+            if (opcao < min || opcao > max) {
+                System.out.println("Opção inválida.");
+            }
+        } while (opcao < min || opcao > max);
+        return opcao;
+    }
+
+    private void escolherDificuldade() {
+        System.out.println();
+        System.out.println("Escolha a dificuldade:");
+        System.out.println("1 - Fácil");
+        System.out.println("2 - Médio");
+        System.out.println("3 - Difícil");
+        System.out.print("Opção: ");
+        int opcao = lerOpcao(1, 3);
+
+        switch (opcao) {
+            case 1 -> dificuldade = Dificuldade.FACIL;
+            case 2 -> dificuldade = Dificuldade.MEDIO;
+            case 3 -> dificuldade = Dificuldade.DIFICIL;
+        }
     }
 
     private void escolherModoDebug() {
@@ -71,7 +120,7 @@ public class GerenciadorJogo {
         debug = resposta.equalsIgnoreCase("S");
     }
 
-    private void criarJogo() throws IOException {
+    private void criarJogo(long seed) throws IOException {
         jogador = new Personagem(
                 0,
                 0,
@@ -79,7 +128,8 @@ public class GerenciadorJogo {
                 dificuldade.getPercepcao());
         mapa = new Mapa(
                 dificuldade.getTamanhoMapa(),
-                scanner);
+                scanner,
+                seed);
         mapa.gerar(jogador, dificuldade);
     }
 
@@ -110,8 +160,6 @@ public class GerenciadorJogo {
                 break;
             }
         }
-
-        encerrar();
     }
 
     private char lerComando() {
@@ -156,8 +204,8 @@ public class GerenciadorJogo {
         System.out.println("Você conseguiu escapar da ilha.");
         System.out.println("======================================");
     }
-    
-    void exibirDerrota() {
+
+    private void exibirDerrota() {
         System.out.println();
         System.out.println("======================================");
         System.out.println("          GAME OVER");
