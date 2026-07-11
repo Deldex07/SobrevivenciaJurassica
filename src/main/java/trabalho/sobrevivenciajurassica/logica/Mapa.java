@@ -54,20 +54,19 @@ public class Mapa {
     }
 
     protected void gerarParedes() {
-        int total = tamanho * tamanho;
-        int quantidade =
-                total / 10 + random.nextInt(total / 10);
-        for (int i = 0; i < quantidade; i++) {
-            int linha;
-            int coluna;
+    int total = tamanho * tamanho;
+    int quantidade = total / 10 + random.nextInt(total / 10);
+    for (int i = 0; i < quantidade; i++) {
+        int linha;
+        int coluna;
 
-            do {
-                linha = random.nextInt(tamanho);
-                coluna = random.nextInt(tamanho);
-            } while (grade[linha][coluna] != null);
-            grade[linha][coluna] = new Parede(linha, coluna);
-        }
+        do {
+            linha = random.nextInt(tamanho);
+            coluna = random.nextInt(tamanho);
+        } while (grade[linha][coluna] != null || (linha == tamanho - 1 && coluna == tamanho - 1));
+        grade[linha][coluna] = new Parede(linha, coluna);
     }
+}
 
     protected void posicionarDinossauro(Dinossauro dino, int linha, int coluna) {
 
@@ -116,7 +115,10 @@ public class Mapa {
         return false;
     }
     if (personagem.getLinha() == novaLinha && personagem.getColuna() == novaColuna) {
-        gerenciadorCombate.iniciarCombate(personagem, dino, true); // dinossauro ataca primeiro
+        gerenciadorCombate.iniciarCombate(personagem, dino, true);
+        if (!dino.estaVivo()) {
+            dinossauros[dino.getLinha()][dino.getColuna()] = null;
+        }
         return true;
     }
 

@@ -43,19 +43,19 @@ public class MapaUI extends Mapa {
 
     @Override
     protected void gerarParedes() {
-        int tamanho = getTamanho();
-        int total = tamanho * tamanho;
-        int quantidade = total / 10 + random.nextInt(total / 10);
+    int tamanho = getTamanho();
+    int total = tamanho * tamanho;
+    int quantidade = total / 10 + random.nextInt(total / 10);
 
-        for (int i = 0; i < quantidade; i++) {
-            int linha, coluna;
-            do {
-                linha = random.nextInt(tamanho);
-                coluna = random.nextInt(tamanho);
-            } while (grade[linha][coluna] != null);
-            grade[linha][coluna] = new ParedeUI(linha, coluna);
-        }
+    for (int i = 0; i < quantidade; i++) {
+        int linha, coluna;
+        do {
+            linha = random.nextInt(tamanho);
+            coluna = random.nextInt(tamanho);
+        } while (grade[linha][coluna] != null || (linha == tamanho - 1 && coluna == tamanho - 1));
+        grade[linha][coluna] = new ParedeUI(linha, coluna);
     }
+}
 
     /**
      * Envolve posicionarCaixaAleatoria (que pode lançar IOException por causa
