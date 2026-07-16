@@ -3,6 +3,7 @@ package trabalho.sobrevivenciajurassica.logica;
 import java.util.Scanner;
 import trabalho.sobrevivenciajurassica.entidades.Dinossauro;
 import trabalho.sobrevivenciajurassica.entidades.Personagem;
+import trabalho.sobrevivenciajurassica.entidades.TiranossauroRex;
 import trabalho.sobrevivenciajurassica.entidades.Velociraptor;
 import trabalho.sobrevivenciajurassica.itens.Arma;
 import trabalho.sobrevivenciajurassica.itens.Dardos;
@@ -62,67 +63,68 @@ public boolean iniciarCombate(Personagem jogador, Dinossauro inimigo, boolean in
 }
 
     private boolean turnoJogador(Personagem jogador, Dinossauro inimigo) {
-        Inventario inventario = jogador.getInventario();
+    Inventario inventario = jogador.getInventario();
+    boolean temBastao = inventario.temBastao();
 
-        System.out.println();
-        System.out.println("Sua vida: " + jogador.getSaude());
-        System.out.println("Vida do inimigo: " + inimigo.getSaude());
-        System.out.println();
-        System.out.println("1 - Soco");
+    System.out.println();
+    System.out.println("Sua vida: " + jogador.getSaude());
+    System.out.println("Vida do inimigo: " + inimigo.getSaude());
+    System.out.println();
+    System.out.println(temBastao ? "1 - Bastão Elétrico" : "1 - Soco");
 
-        if (inventario.temBastao())
-            System.out.println("2 - Bastão Elétrico");
-        if (inventario.temDardos())
-            System.out.println("3 - Dardos Tranquilizantes");
-        if (inventario.temKitMedico())
-            System.out.println("4 - Usar Kit Médico");
+    if (inventario.temDardos())
+        System.out.println("2 - Dardos Tranquilizantes");
+    if (inventario.temKitMedico())
+        System.out.println("3 - Usar Kit Médico");
 
-        System.out.println("5 - Fugir");
-        System.out.print("Escolha: ");
-        int opcao = scanner.nextInt();
+    System.out.println("4 - Fugir");
+    System.out.print("Escolha: ");
+    int opcao = scanner.nextInt();
 
-        switch (opcao) {
-            case 1:
+    switch (opcao) {
+        case 1:
+            if (temBastao) {
+                atacarComArma(inventario.getBastao(), inimigo);
+            } else {
                 atacarSoco(inimigo);
-                break;
+            }
+            break;
 
-            case 2:
-                if (inventario.temBastao())
-                    atacarComArma(inventario.getBastao(), inimigo);
-                else
-                    System.out.println("Você não possui Bastão Elétrico.");
-                break;
-
-            case 3:
-                if (inventario.temDardos())
-                    atacarComDardos(inventario.getDardos(), inimigo);
-                else
-                    System.out.println("Você não possui Dardos.");
-                break;
-
-            case 4:
-                if (inventario.temKitMedico())
-                    jogador.usarKitMedico();
-                else
-                    System.out.println("Você não possui Kit Médico.");
-                break;
-
-            case 5:
-                return fugir();
-
-            default:
+        case 2:
+            if (inventario.temDardos())
+                atacarComDardos(inventario.getDardos(), inimigo);
+            else
                 System.out.println("Opção inválida.");
-        }
-        return false;
+            break;
+
+        case 3:
+            if (inventario.temKitMedico())
+                jogador.usarKitMedico();
+            else
+                System.out.println("Opção inválida.");
+            break;
+
+        case 4:
+            return fugir();
+
+        default:
+            System.out.println("Opção inválida.");
     }
+    return false;
+}
 
     private void atacarSoco(Dinossauro inimigo) {
+
+        if (inimigo instanceof TiranossauroRex) {
+            System.out.println("Suas mãos nuas não fazem nenhum efeito contra o Tiranossauro Rex!");
+            return;
+        }
 
         Dado dado = new Dado(6);
         int resultado = dado.rolar();
         System.out.println("Você atacou com um soco.");
 
-        if (resultado == 1) {
+        if (resultado <= 2) {
             System.out.println("Você errou!");
             return;
         }
