@@ -15,7 +15,8 @@ public class GerenciadorJogo {
     private Dificuldade dificuldade;
     private Mapa mapa;
     private Personagem jogador;
-    private boolean debug;
+    private boolean debugPermitido;
+    private boolean debugAtivo;
     private long seedAtual;
 
     public GerenciadorJogo() {
@@ -50,15 +51,10 @@ public class GerenciadorJogo {
         encerrar();
     }
 
-    /**
-     * Cuida de uma "sessão" de jogo: escolhe dificuldade e debug uma vez,
-     * depois fica em loop entre jogar/reiniciar até o jogador escolher
-     * "Novo Jogo" (o que devolve o controle para o menu principal).
-     */
     private void jogarNovaPartida() throws IOException {
         escolherDificuldade();
         escolherModoDebug();
-        seedAtual = System.nanoTime(); // define o mapa desta sessão
+        seedAtual = System.nanoTime();
 
         boolean voltarAoMenuPrincipal = false;
         while (!voltarAoMenuPrincipal) {
@@ -69,11 +65,10 @@ public class GerenciadorJogo {
 
             int opcao = menuFimDeJogo();
             if (opcao == 1) {
-                // Reiniciar Jogo: mesma dificuldade e mesma seed -> mesmo mapa
                 System.out.println();
                 System.out.println("Reiniciando com o mesmo mapa...");
             } else {
-                voltarAoMenuPrincipal = true; // Novo Jogo
+                voltarAoMenuPrincipal = true;
             }
         }
     }
@@ -117,7 +112,7 @@ public class GerenciadorJogo {
         System.out.println();
         System.out.print("Ativar modo Debug? (S/N): ");
         String resposta = scanner.next();
-        debug = resposta.equalsIgnoreCase("S");
+        debugPermitido = resposta.equalsIgnoreCase("S");
     }
 
     private void criarJogo(long seed) throws IOException {
@@ -131,41 +126,83 @@ public class GerenciadorJogo {
                 scanner,
                 seed);
         mapa.gerar(jogador, dificuldade);
+        debugAtivo = debugPermitido; // cada partida começa no estado escolhido originalmente
     }
 
     private void executarJogo() {
         while (true) {
             System.out.println();
-            mapa.imprimir(debug);
+            mapa.imprimir(debugAtivo);
             System.out.println();
             System.out.println("Vida: " + jogador.getSaude());
             System.out.println(jogador.getInventario());
+            exibirMenuExploracao();
 
             char comando = lerComando();
-            boolean movimentoRealizado = processarMovimento(comando);
-            if (!movimentoRealizado) {
+            boolean consomeTurno = processarComando(comando);
+            if (!consomeTurno) {
                 continue;
             }
             mapa.moverDinossauros();
 
             if (mapa.venceu()) {
-                mapa.imprimir(debug);
+                mapa.imprimir(debugAtivo);
                 exibirVitoria();
                 break;
             }
 
             if (mapa.perdeu()) {
-                mapa.imprimir(debug);
+                mapa.imprimir(debugAtivo);
                 exibirDerrota();
                 break;
             }
         }
     }
 
-    private char lerComando() {
+    private void exibirMenuExploracao() {
         System.out.println();
-        System.out.print("Movimento (W A S D): ");
+        System.out.println("Comandos disponíveis:");
+        System.out.println("W A S D - Mover");
+        if (jogador.getInventario().temKitMedico()) {
+            System.out.println("C - Usar Kit Médico");
+        }
+        if (debugPermitido) {
+            System.out.println("G - " + (debugAtivo ? "Desativar" : "Ativar") + " modo Debug");
+        }
+    }
+
+    private char lerComando() {
+        System.out.print("Comando: ");
         return scanner.next().toUpperCase().charAt(0);
+    }
+
+    /**
+     * @return true se a ação consumiu uma jogada (dinossauros devem se mover em seguida)
+     */
+    private boolean processarComando(char comando) {
+        return switch (comando) {
+            case 'W', 'A', 'S', 'D' -> processarMovimento(comando);
+            case 'C' -> usarCura();
+            case 'G' -> alternarDebug();
+            default -> {
+                System.out.println("Comando inválido.");
+                yield false;
+            }
+        };
+    }
+
+    private boolean usarCura() {
+        return jogador.usarKitMedico(); // já imprime mensagens; conta como jogada se curou
+    }
+
+    private boolean alternarDebug() {
+        if (!debugPermitido) {
+            System.out.println("Comando inválido.");
+            return false;
+        }
+        debugAtivo = !debugAtivo;
+        System.out.println("Modo debug " + (debugAtivo ? "ativado." : "desativado."));
+        return false; // alternar visualização não consome jogada
     }
 
     private boolean processarMovimento(char comando) {
@@ -173,25 +210,10 @@ public class GerenciadorJogo {
         int coluna = jogador.getColuna();
 
         switch (comando) {
-            case 'W':
-                linha--;
-                break;
-
-            case 'S':
-                linha++;
-                break;
-
-            case 'A':
-                coluna--;
-                break;
-
-            case 'D':
-                coluna++;
-                break;
-
-            default:
-                System.out.println("Comando inválido.");
-                return false;
+            case 'W': linha--; break;
+            case 'S': linha++; break;
+            case 'A': coluna--; break;
+            case 'D': coluna++; break;
         }
 
         return mapa.moverPersonagem(linha, coluna);
