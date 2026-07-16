@@ -10,7 +10,7 @@ public class VelociraptorUI extends Velociraptor implements PossuiImagem {
 
     static {
         try {
-            IMAGEM = CarregadorImagem.carregar("/imagens/Velociraptor.png");
+            IMAGEM = CarregadorImagem.carregar("/imagens/velo.png");
         } catch (IOException e) {
             System.out.println("Erro ao carregar imagem do Velociraptor: " + e.getMessage());
         }

@@ -9,7 +9,7 @@ public class CompsognatoUI extends Compsognato implements PossuiImagem {
 
     static {
         try {
-            IMAGEM = CarregadorImagem.carregar("/imagens/Compsognato.png");
+            IMAGEM = CarregadorImagem.carregar("/imagens/Compso.png");
         } catch (IOException e) {
             System.out.println("Erro ao carregar imagem do Compsognato: " + e.getMessage());
         }

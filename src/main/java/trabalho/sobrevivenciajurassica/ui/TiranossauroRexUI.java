@@ -10,7 +10,7 @@ public class TiranossauroRexUI extends TiranossauroRex implements PossuiImagem {
 
     static {
         try {
-            IMAGEM = CarregadorImagem.carregar("/imagens/TiranossauroRex.png");
+            IMAGEM = CarregadorImagem.carregar("/imagens/rex.png");
         } catch (IOException e) {
             System.out.println("Erro ao carregar imagem do TiranossauroRex: " + e.getMessage());
         }

@@ -10,7 +10,7 @@ public class TroodonteUI extends Troodonte implements PossuiImagem {
 
     static {
         try {
-            IMAGEM = CarregadorImagem.carregar("/imagens/Troodonte.png");
+            IMAGEM = CarregadorImagem.carregar("/imagens/troo.png");
         } catch (IOException e) {
             System.out.println("Erro ao carregar imagem do Troodonte: " + e.getMessage());
         }
