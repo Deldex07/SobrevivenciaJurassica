@@ -54,19 +54,19 @@ public class Mapa {
     }
 
     protected void gerarParedes() {
-    int total = tamanho * tamanho;
-    int quantidade = total / 10 + random.nextInt(total / 10);
-    for (int i = 0; i < quantidade; i++) {
-        int linha;
-        int coluna;
+        int total = tamanho * tamanho;
+        int quantidade = total / 10 + random.nextInt(total / 10);
+        for (int i = 0; i < quantidade; i++) {
+            int linha;
+            int coluna;
 
-        do {
-            linha = random.nextInt(tamanho);
-            coluna = random.nextInt(tamanho);
-        } while (grade[linha][coluna] != null || (linha == tamanho - 1 && coluna == tamanho - 1));
-        grade[linha][coluna] = new Parede(linha, coluna);
+            do {
+                linha = random.nextInt(tamanho);
+                coluna = random.nextInt(tamanho);
+            } while (grade[linha][coluna] != null || (linha == tamanho - 1 && coluna == tamanho - 1));
+            grade[linha][coluna] = new Parede(linha, coluna);
+        }
     }
-}
 
     protected void posicionarDinossauro(Dinossauro dino, int linha, int coluna) {
 
@@ -105,26 +105,26 @@ public class Mapa {
     }
 
     public boolean tentarMoverDinossauro(Dinossauro dino, int novaLinha, int novaColuna) {
-    if (!dentroDosLimites(novaLinha, novaColuna)) {
-        return false;
-    }
-    if (grade[novaLinha][novaColuna] instanceof Parede) {
-        return false;
-    }
-    if (dinossauros[novaLinha][novaColuna] != null) {
-        return false;
-    }
-    if (personagem.getLinha() == novaLinha && personagem.getColuna() == novaColuna) {
-        gerenciadorCombate.iniciarCombate(personagem, dino, true);
-        if (!dino.estaVivo()) {
-            dinossauros[dino.getLinha()][dino.getColuna()] = null;
+        if (!dentroDosLimites(novaLinha, novaColuna)) {
+            return false;
         }
+        if (grade[novaLinha][novaColuna] instanceof Parede) {
+            return false;
+        }
+        if (dinossauros[novaLinha][novaColuna] != null) {
+            return false;
+        }
+        if (personagem.getLinha() == novaLinha && personagem.getColuna() == novaColuna) {
+            gerenciadorCombate.iniciarCombate(personagem, dino, true);
+            if (!dino.estaVivo()) {
+                dinossauros[dino.getLinha()][dino.getColuna()] = null;
+            }
+            return true;
+        }
+
+        moverDinossauro(dino, novaLinha, novaColuna);
         return true;
     }
-
-    moverDinossauro(dino, novaLinha, novaColuna);
-    return true;
-}
 
     public boolean moverPersonagem(int novaLinha, int novaColuna) {
         if (!dentroDosLimites(novaLinha, novaColuna)) {
@@ -238,8 +238,17 @@ public class Mapa {
         }
     }
 
-    private boolean estaNaLinhaDeVisao(int linha, int coluna) {
+    protected boolean estaNaLinhaDeVisao(int linha, int coluna) {
         return linha == personagem.getLinha() || coluna == personagem.getColuna();
+    }
+
+    /**
+     * Indica se o dinossauro na posição informada deveria ser exibido ao
+     * jogador — seja porque está na linha de visão, seja porque o modo
+     * debug está ativo. Usado tanto pelo terminal quanto pela UI gráfica.
+     */
+    public boolean dinossauroVisivel(int linha, int coluna, boolean debug) {
+        return debug || estaNaLinhaDeVisao(linha, coluna);
     }
 
     public int getTamanho() {
