@@ -1,6 +1,7 @@
 /home/deldex/Documentos/SobrevivenciaJurassica-main/SobrevivenciaJurassica/src/main/java/trabalho/sobrevivenciajurassica/entidades/Personagem.java
 /home/deldex/Documentos/SobrevivenciaJurassica-main/SobrevivenciaJurassica/src/main/java/trabalho/sobrevivenciajurassica/itens/Dardos.java
 /home/deldex/Documentos/SobrevivenciaJurassica-main/SobrevivenciaJurassica/src/main/java/trabalho/sobrevivenciajurassica/entidades/EntidadeViva.java
+/home/deldex/Documentos/SobrevivenciaJurassica-main/SobrevivenciaJurassica/src/main/java/trabalho/sobrevivenciajurassica/ui/CorChao.java
 /home/deldex/Documentos/SobrevivenciaJurassica-main/SobrevivenciaJurassica/src/main/java/trabalho/sobrevivenciajurassica/entidades/Dinossauro.java
 /home/deldex/Documentos/SobrevivenciaJurassica-main/SobrevivenciaJurassica/src/main/java/trabalho/sobrevivenciajurassica/ui/CaixaSuprimentosUI.java
 /home/deldex/Documentos/SobrevivenciaJurassica-main/SobrevivenciaJurassica/src/main/java/trabalho/sobrevivenciajurassica/logica/Dado.java
@@ -15,6 +16,7 @@
 /home/deldex/Documentos/SobrevivenciaJurassica-main/SobrevivenciaJurassica/src/main/java/trabalho/sobrevivenciajurassica/comportamentos/MovimentoPerseguidor.java
 /home/deldex/Documentos/SobrevivenciaJurassica-main/SobrevivenciaJurassica/src/main/java/trabalho/sobrevivenciajurassica/entidades/Troodonte.java
 /home/deldex/Documentos/SobrevivenciaJurassica-main/SobrevivenciaJurassica/src/main/java/trabalho/sobrevivenciajurassica/entidades/Velociraptor.java
+/home/deldex/Documentos/SobrevivenciaJurassica-main/SobrevivenciaJurassica/src/main/java/trabalho/sobrevivenciajurassica/ui/MapaPanel.java
 /home/deldex/Documentos/SobrevivenciaJurassica-main/SobrevivenciaJurassica/src/main/java/trabalho/sobrevivenciajurassica/ui/BastaoEletricoUI.java
 /home/deldex/Documentos/SobrevivenciaJurassica-main/SobrevivenciaJurassica/src/main/java/trabalho/sobrevivenciajurassica/entidades/Parede.java
 /home/deldex/Documentos/SobrevivenciaJurassica-main/SobrevivenciaJurassica/src/main/java/trabalho/sobrevivenciajurassica/itens/Itens.java
