@@ -2,6 +2,7 @@ package trabalho.sobrevivenciajurassica.logica;
 
 import java.util.Scanner;
 import java.io.IOException;
+import java.util.InputMismatchException;
 import trabalho.sobrevivenciajurassica.entidades.Personagem;
 
 /**
@@ -82,15 +83,19 @@ public class GerenciadorJogo {
     }
 
     private int lerOpcao(int min, int max) {
-        int opcao;
-        do {
-            opcao = scanner.nextInt();
-            if (opcao < min || opcao > max) {
-                System.out.println("Opção inválida.");
+    while (true) {
+        try {
+            int opcao = scanner.nextInt();
+            if (opcao >= min && opcao <= max) {
+                return opcao;
             }
-        } while (opcao < min || opcao > max);
-        return opcao;
+            System.out.println("Opção inválida.");
+        } catch (InputMismatchException e) {
+            scanner.next();
+            System.out.println("Entrada inválida, digite um número.");
+        }
     }
+}
 
     private void escolherDificuldade() {
         System.out.println();

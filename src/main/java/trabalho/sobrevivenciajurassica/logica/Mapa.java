@@ -127,49 +127,52 @@ public class Mapa {
     }
 
     public boolean moverPersonagem(int novaLinha, int novaColuna) {
-        if (!dentroDosLimites(novaLinha, novaColuna)) {
-            System.out.println("Você não pode sair do mapa.");
-            return false;
-        }
-
-        if (grade[novaLinha][novaColuna] instanceof Parede) {
-            System.out.println("Há uma parede nessa posição.");
-            return false;
-        }
-
-        Dinossauro dino = dinossauros[novaLinha][novaColuna];
-        if (dino != null) {
-            boolean venceu = gerenciadorCombate.iniciarCombate(personagem, dino);
-            if (!venceu) {
-                return false;
-            }
-
-            if (!dino.estaVivo()) {
-                dinossauros[novaLinha][novaColuna] = null;
-            }
-        }
-
-        ElementoMapa elemento = grade[novaLinha][novaColuna];
-        if (elemento instanceof CaixaSuprimentos caixa) {
-            System.out.println("Você encontrou uma caixa de suprimentos!");
-
-            boolean apareceuCompsognato = caixa.abrir(personagem);
-            grade[novaLinha][novaColuna] = null;
-
-            if (apareceuCompsognato) {
-                Compsognato compsognato = new Compsognato(1, novaLinha, novaColuna, 'C');
-                boolean venceu = gerenciadorCombate.iniciarCombate(personagem, compsognato);
-                if (!venceu) {
-                    return false;
-                }
-            }
-        }
-
-        grade[personagem.getLinha()][personagem.getColuna()] = null;
-        personagem.moverPara(novaLinha, novaColuna);
-        grade[novaLinha][novaColuna] = personagem;
-        return true;
+    if (!dentroDosLimites(novaLinha, novaColuna)) {
+        System.out.println("Você não pode sair do mapa.");
+        return false;
     }
+
+    if (grade[novaLinha][novaColuna] instanceof Parede) {
+        System.out.println("Há uma parede nessa posição.");
+        return false;
+    }
+
+    Dinossauro dino = dinossauros[novaLinha][novaColuna];
+    if (dino != null) {
+        boolean sobreviveu = gerenciadorCombate.iniciarCombate(personagem, dino);
+        if (!sobreviveu) {
+            return true; // jogador morreu: consome a jogada para que perdeu() seja detectado já no próximo check
+        }
+        if (dino.estaVivo()) {
+            return true; // fugiu com sucesso: consome a jogada, mas não avança para a célula do inimigo
+        }
+        dinossauros[novaLinha][novaColuna] = null;
+    }
+
+    ElementoMapa elemento = grade[novaLinha][novaColuna];
+    if (elemento instanceof CaixaSuprimentos caixa) {
+        System.out.println("Você encontrou uma caixa de suprimentos!");
+
+        boolean apareceuCompsognato = caixa.abrir(personagem);
+        grade[novaLinha][novaColuna] = null;
+
+        if (apareceuCompsognato) {
+            Compsognato compsognato = new Compsognato(1, novaLinha, novaColuna, 'C');
+            boolean sobreviveuSurpresa = gerenciadorCombate.iniciarCombate(personagem, compsognato);
+            if (!sobreviveuSurpresa) {
+                return true;
+            }
+            if (compsognato.estaVivo()) {
+                return true; // fugiu do Compsognato surpresa
+            }
+        }
+    }
+
+    grade[personagem.getLinha()][personagem.getColuna()] = null;
+    personagem.moverPara(novaLinha, novaColuna);
+    grade[novaLinha][novaColuna] = personagem;
+    return true;
+}
 
     public void moverDinossauros() {
         Dinossauro[][] copia = new Dinossauro[tamanho][tamanho];
@@ -239,8 +242,39 @@ public class Mapa {
     }
 
     protected boolean estaNaLinhaDeVisao(int linha, int coluna) {
-        return linha == personagem.getLinha() || coluna == personagem.getColuna();
+    int linhaPersonagem = personagem.getLinha();
+    int colunaPersonagem = personagem.getColuna();
+
+    if (linha == linhaPersonagem) {
+        int passo = coluna > colunaPersonagem ? 1 : -1;
+        for (int c = colunaPersonagem + passo; c != coluna; c += passo) {
+            if (bloqueiaVisao(linha, c)) {
+                return false;
+            }
+        }
+        return true;
     }
+
+    if (coluna == colunaPersonagem) {
+        int passo = linha > linhaPersonagem ? 1 : -1;
+        for (int l = linhaPersonagem + passo; l != linha; l += passo) {
+            if (bloqueiaVisao(l, coluna)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Indica se a posição bloqueia a linha de visão do jogador.
+ * Paredes e dinossauros bloqueiam; caixas de suprimentos não bloqueiam.
+ */
+private boolean bloqueiaVisao(int linha, int coluna) {
+    return (grade[linha][coluna] instanceof Parede) || dinossauros[linha][coluna] != null;
+}
 
     /**
      * Indica se o dinossauro na posição informada deveria ser exibido ao
