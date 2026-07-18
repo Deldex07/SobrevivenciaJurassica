@@ -1,8 +1,10 @@
-package trabalho.sobrevivenciajurassica.ui;
+package trabalho.sobrevivenciajurassica.ui.entidades;
 
 import java.awt.Image;
 import java.io.IOException;
 import trabalho.sobrevivenciajurassica.entidades.TiranossauroRex;
+import trabalho.sobrevivenciajurassica.ui.renderizacao.CarregadorImagem;
+import trabalho.sobrevivenciajurassica.ui.renderizacao.PossuiImagem;
 
 public class TiranossauroRexUI extends TiranossauroRex implements PossuiImagem {
     
@@ -10,7 +12,7 @@ public class TiranossauroRexUI extends TiranossauroRex implements PossuiImagem {
 
     static {
         try {
-            IMAGEM = CarregadorImagem.carregar("/imagens/rex.png");
+            IMAGEM = CarregadorImagem.carregar("/trabalho/sobrevivenciajurassica/imagens/TiranossauroRex.png");
         } catch (IOException e) {
             System.out.println("Erro ao carregar imagem do TiranossauroRex: " + e.getMessage());
         }

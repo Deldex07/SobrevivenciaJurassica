@@ -1,8 +1,10 @@
-package trabalho.sobrevivenciajurassica.ui;
+package trabalho.sobrevivenciajurassica.ui.entidades;
 
 import java.awt.Image;
 import java.io.IOException;
 import trabalho.sobrevivenciajurassica.entidades.Velociraptor;
+import trabalho.sobrevivenciajurassica.ui.renderizacao.CarregadorImagem;
+import trabalho.sobrevivenciajurassica.ui.renderizacao.PossuiImagem;
 
 public class VelociraptorUI extends Velociraptor implements PossuiImagem {
 
@@ -10,7 +12,7 @@ public class VelociraptorUI extends Velociraptor implements PossuiImagem {
 
     static {
         try {
-            IMAGEM = CarregadorImagem.carregar("/imagens/velo.png");
+            IMAGEM = CarregadorImagem.carregar("/trabalho/sobrevivenciajurassica/imagens/velociraptor.png");
         } catch (IOException e) {
             System.out.println("Erro ao carregar imagem do Velociraptor: " + e.getMessage());
         }

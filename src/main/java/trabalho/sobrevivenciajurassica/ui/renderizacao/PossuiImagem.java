@@ -1,4 +1,4 @@
-package trabalho.sobrevivenciajurassica.ui;
+package trabalho.sobrevivenciajurassica.ui.renderizacao;
 
 import java.awt.Image;
 /**

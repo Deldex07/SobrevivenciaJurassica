@@ -1,4 +1,4 @@
-package trabalho.sobrevivenciajurassica.ui;
+package trabalho.sobrevivenciajurassica.ui.renderizacao;
 
 import java.awt.Graphics;
 import javax.swing.JPanel;
@@ -8,11 +8,16 @@ import trabalho.sobrevivenciajurassica.entidades.Dinossauro;
 
 public class MapaPanel extends JPanel {
 
-    private final Mapa mapa;
+    private Mapa mapa;
     private boolean debug;
 
     public MapaPanel(Mapa mapa) {
         this.mapa = mapa;
+    }
+
+    public void setMapa(Mapa mapa) {
+        this.mapa = mapa;
+        repaint();
     }
 
     public void setDebug(boolean debug) {
@@ -23,6 +28,10 @@ public class MapaPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        if (mapa == null) {
+            return;
+        }
 
         int tamanho = mapa.getTamanho();
         int larguraCelula = getWidth() / tamanho;

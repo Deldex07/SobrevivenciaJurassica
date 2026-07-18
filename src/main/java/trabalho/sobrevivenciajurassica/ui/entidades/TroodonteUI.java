@@ -1,8 +1,10 @@
-package trabalho.sobrevivenciajurassica.ui;
+package trabalho.sobrevivenciajurassica.ui.entidades;
 
 import java.awt.Image;
 import java.io.IOException;
 import trabalho.sobrevivenciajurassica.entidades.Troodonte;
+import trabalho.sobrevivenciajurassica.ui.renderizacao.CarregadorImagem;
+import trabalho.sobrevivenciajurassica.ui.renderizacao.PossuiImagem;
 
 public class TroodonteUI extends Troodonte implements PossuiImagem {
     
@@ -10,7 +12,7 @@ public class TroodonteUI extends Troodonte implements PossuiImagem {
 
     static {
         try {
-            IMAGEM = CarregadorImagem.carregar("/imagens/troo.png");
+            IMAGEM = CarregadorImagem.carregar("/trabalho/sobrevivenciajurassica/imagens/troodonte.png");
         } catch (IOException e) {
             System.out.println("Erro ao carregar imagem do Troodonte: " + e.getMessage());
         }

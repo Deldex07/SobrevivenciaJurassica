@@ -1,4 +1,4 @@
-package trabalho.sobrevivenciajurassica.ui;
+package trabalho.sobrevivenciajurassica.ui.renderizacao;
 import java.io.IOException;
 import java.awt.Image;
 import java.net.URL;

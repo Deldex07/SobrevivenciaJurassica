@@ -1,8 +1,10 @@
-package trabalho.sobrevivenciajurassica.ui;
+package trabalho.sobrevivenciajurassica.ui.itens;
 
 import java.awt.Image;
 import java.io.IOException;
 import trabalho.sobrevivenciajurassica.itens.BastaoEletrico;
+import trabalho.sobrevivenciajurassica.ui.renderizacao.CarregadorImagem;
+import trabalho.sobrevivenciajurassica.ui.renderizacao.PossuiImagem;
 
 public class BastaoEletricoUI extends BastaoEletrico implements PossuiImagem {
 
@@ -10,7 +12,7 @@ public class BastaoEletricoUI extends BastaoEletrico implements PossuiImagem {
 
     static {
         try {
-            IMAGEM = CarregadorImagem.carregar("/imagens/bastao_eletrico.png");
+            IMAGEM = CarregadorImagem.carregar("/trabalho/sobrevivenciajurassica/imagens/bastao_eletrico.png");
         } catch (IOException e) {
             System.out.println("Erro ao carregar imagem do Bastão Elétrico: " + e.getMessage());
         }
