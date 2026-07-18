@@ -4,15 +4,11 @@ import java.util.Scanner;
 import java.io.IOException;
 import java.util.InputMismatchException;
 import trabalho.sobrevivenciajurassica.entidades.Personagem;
+import trabalho.sobrevivenciajurassica.interfaces.EntradaCombate;
 
-/**
- * Classe responsável por gerenciar o jogo, incluindo o menu principal, escolha
- * da dificuldade, criação do mapa, execução do loop principal e o menu de
- * fim de jogo (reiniciar / novo jogo).
- * GerenciadorJogo
- */
 public class GerenciadorJogo {
     private final Scanner scanner;
+    private final EntradaCombate entradaCombate;
     private Dificuldade dificuldade;
     private Mapa mapa;
     private Personagem jogador;
@@ -22,6 +18,7 @@ public class GerenciadorJogo {
 
     public GerenciadorJogo() {
         scanner = new Scanner(System.in);
+        entradaCombate = new EntradaCombateTerminal(scanner);
     }
 
     public void iniciarJogo() throws IOException {
@@ -83,19 +80,19 @@ public class GerenciadorJogo {
     }
 
     private int lerOpcao(int min, int max) {
-    while (true) {
-        try {
-            int opcao = scanner.nextInt();
-            if (opcao >= min && opcao <= max) {
-                return opcao;
+        while (true) {
+            try {
+                int opcao = scanner.nextInt();
+                if (opcao >= min && opcao <= max) {
+                    return opcao;
+                }
+                System.out.println("Opção inválida.");
+            } catch (InputMismatchException e) {
+                scanner.next();
+                System.out.println("Entrada inválida, digite um número.");
             }
-            System.out.println("Opção inválida.");
-        } catch (InputMismatchException e) {
-            scanner.next();
-            System.out.println("Entrada inválida, digite um número.");
         }
     }
-}
 
     private void escolherDificuldade() {
         System.out.println();
@@ -121,17 +118,10 @@ public class GerenciadorJogo {
     }
 
     private void criarJogo(long seed) throws IOException {
-        jogador = new Personagem(
-                0,
-                0,
-                5,
-                dificuldade.getPercepcao());
-        mapa = new Mapa(
-                dificuldade.getTamanhoMapa(),
-                scanner,
-                seed);
+        jogador = new Personagem(0, 0, 5, dificuldade.getPercepcao());
+        mapa = new Mapa(dificuldade.getTamanhoMapa(), entradaCombate, seed);
         mapa.gerar(jogador, dificuldade);
-        debugAtivo = debugPermitido; // cada partida começa no estado escolhido originalmente
+        debugAtivo = debugPermitido;
     }
 
     private void executarJogo() {
@@ -181,9 +171,6 @@ public class GerenciadorJogo {
         return scanner.next().toUpperCase().charAt(0);
     }
 
-    /**
-     * @return true se a ação consumiu uma jogada (dinossauros devem se mover em seguida)
-     */
     private boolean processarComando(char comando) {
         return switch (comando) {
             case 'W', 'A', 'S', 'D' -> processarMovimento(comando);
@@ -197,7 +184,7 @@ public class GerenciadorJogo {
     }
 
     private boolean usarCura() {
-        return jogador.usarKitMedico(); // já imprime mensagens; conta como jogada se curou
+        return jogador.usarKitMedico();
     }
 
     private boolean alternarDebug() {
@@ -207,7 +194,7 @@ public class GerenciadorJogo {
         }
         debugAtivo = !debugAtivo;
         System.out.println("Modo debug " + (debugAtivo ? "ativado." : "desativado."));
-        return false; // alternar visualização não consome jogada
+        return false;
     }
 
     private boolean processarMovimento(char comando) {

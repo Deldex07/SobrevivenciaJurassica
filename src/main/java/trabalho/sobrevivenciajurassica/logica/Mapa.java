@@ -1,9 +1,8 @@
 package trabalho.sobrevivenciajurassica.logica;
 
 import java.util.Random;
-import java.util.Scanner;
-import java.io.IOException;
 import trabalho.sobrevivenciajurassica.entidades.*;
+import trabalho.sobrevivenciajurassica.interfaces.EntradaCombate;
 import trabalho.sobrevivenciajurassica.itens.ConteudoCaixa;
 
 /**
@@ -19,18 +18,19 @@ public class Mapa {
     private final GerenciadorCombate gerenciadorCombate;
     protected final Random random;
 
-    public Mapa(int tamanho, Scanner scanner) {
-        this(tamanho, scanner, new Random().nextLong());
+    public Mapa(int tamanho, EntradaCombate entradaCombate) {
+        this(tamanho, entradaCombate, new Random().nextLong());
     }
-    public Mapa(int tamanho, Scanner scanner, long seed) {
+
+    public Mapa(int tamanho, EntradaCombate entradaCombate, long seed) {
         this.tamanho = tamanho;
         this.grade = new ElementoMapa[tamanho][tamanho];
         this.dinossauros = new Dinossauro[tamanho][tamanho];
-        this.gerenciadorCombate = new GerenciadorCombate(scanner);
+        this.gerenciadorCombate = new GerenciadorCombate(entradaCombate);
         this.random = new Random(seed);
     }
 
-    public void gerar(Personagem personagem, Dificuldade dificuldade) throws IOException {
+    public void gerar(Personagem personagem, Dificuldade dificuldade) {
         this.personagem = personagem;
         grade[0][0] = personagem;
         personagem.setLinha(0);
@@ -47,10 +47,15 @@ public class Mapa {
 
         posicionarDinossauroAleatorio(new Velociraptor(2, 0, 0, 'V'));
         posicionarDinossauroAleatorio(new Velociraptor(2, 0, 0, 'V'));
-        posicionarCaixaAleatoria(ConteudoCaixa.KIT_MEDICO);
+
         posicionarCaixaAleatoria(ConteudoCaixa.BASTAO_ELETRICO);
-        posicionarCaixaAleatoria(ConteudoCaixa.DARDOS);
-        posicionarCaixaAleatoria(ConteudoCaixa.COMPSOGNATO);
+        posicionarCaixaAleatoria(ConteudoCaixa.KIT_MEDICO);
+        posicionarCaixaAleatoria(sortearConteudoSecundario());
+        posicionarCaixaAleatoria(sortearConteudoSecundario());
+    }
+
+    protected ConteudoCaixa sortearConteudoSecundario() {
+        return random.nextBoolean() ? ConteudoCaixa.DARDOS : ConteudoCaixa.COMPSOGNATO;
     }
 
     protected void gerarParedes() {
@@ -69,7 +74,6 @@ public class Mapa {
     }
 
     protected void posicionarDinossauro(Dinossauro dino, int linha, int coluna) {
-
         dino.setLinha(linha);
         dino.setColuna(coluna);
         dinossauros[linha][coluna] = dino;
@@ -86,19 +90,18 @@ public class Mapa {
         posicionarDinossauro(dino, linha, coluna);
     }
 
-    protected void posicionarCaixaAleatoria( ConteudoCaixa conteudo ) throws IOException {
+    protected void posicionarCaixaAleatoria(ConteudoCaixa conteudo) {
         int linha;
         int coluna;
 
         do {
             linha = random.nextInt(tamanho);
             coluna = random.nextInt(tamanho);
-        } while (grade[linha][coluna] != null || (linha == 0 && coluna == 0));
+        } while (!posicaoLivre(linha, coluna));
         grade[linha][coluna] = new CaixaSuprimentos(conteudo, linha, coluna, 'X');
     }
 
-    public void moverDinossauro( Dinossauro dino, int novaLinha, int novaColuna) {
-
+    public void moverDinossauro(Dinossauro dino, int novaLinha, int novaColuna) {
         dinossauros[dino.getLinha()][dino.getColuna()] = null;
         dino.moverPara(novaLinha, novaColuna);
         dinossauros[novaLinha][novaColuna] = dino;
@@ -127,52 +130,52 @@ public class Mapa {
     }
 
     public boolean moverPersonagem(int novaLinha, int novaColuna) {
-    if (!dentroDosLimites(novaLinha, novaColuna)) {
-        System.out.println("Você não pode sair do mapa.");
-        return false;
-    }
-
-    if (grade[novaLinha][novaColuna] instanceof Parede) {
-        System.out.println("Há uma parede nessa posição.");
-        return false;
-    }
-
-    Dinossauro dino = dinossauros[novaLinha][novaColuna];
-    if (dino != null) {
-        boolean sobreviveu = gerenciadorCombate.iniciarCombate(personagem, dino);
-        if (!sobreviveu) {
-            return true; // jogador morreu: consome a jogada para que perdeu() seja detectado já no próximo check
+        if (!dentroDosLimites(novaLinha, novaColuna)) {
+            System.out.println("Você não pode sair do mapa.");
+            return false;
         }
-        if (dino.estaVivo()) {
-            return true; // fugiu com sucesso: consome a jogada, mas não avança para a célula do inimigo
+
+        if (grade[novaLinha][novaColuna] instanceof Parede) {
+            System.out.println("Há uma parede nessa posição.");
+            return false;
         }
-        dinossauros[novaLinha][novaColuna] = null;
-    }
 
-    ElementoMapa elemento = grade[novaLinha][novaColuna];
-    if (elemento instanceof CaixaSuprimentos caixa) {
-        System.out.println("Você encontrou uma caixa de suprimentos!");
-
-        boolean apareceuCompsognato = caixa.abrir(personagem);
-        grade[novaLinha][novaColuna] = null;
-
-        if (apareceuCompsognato) {
-            Compsognato compsognato = new Compsognato(1, novaLinha, novaColuna, 'C');
-            boolean sobreviveuSurpresa = gerenciadorCombate.iniciarCombate(personagem, compsognato);
-            if (!sobreviveuSurpresa) {
+        Dinossauro dino = dinossauros[novaLinha][novaColuna];
+        if (dino != null) {
+            boolean sobreviveu = gerenciadorCombate.iniciarCombate(personagem, dino);
+            if (!sobreviveu) {
+                return false;
+            }
+            if (dino.estaVivo()) {
                 return true;
             }
-            if (compsognato.estaVivo()) {
-                return true; // fugiu do Compsognato surpresa
+            dinossauros[novaLinha][novaColuna] = null;
+        }
+
+        ElementoMapa elemento = grade[novaLinha][novaColuna];
+        if (elemento instanceof CaixaSuprimentos caixa) {
+            System.out.println("Você encontrou uma caixa de suprimentos!");
+
+            boolean apareceuCompsognato = caixa.abrir(personagem);
+            grade[novaLinha][novaColuna] = null;
+
+            if (apareceuCompsognato) {
+                Compsognato compsognato = new Compsognato(1, novaLinha, novaColuna, 'C');
+                boolean sobreviveuSurpresa = gerenciadorCombate.iniciarCombate(personagem, compsognato);
+                if (!sobreviveuSurpresa) {
+                    return false;
+                }
+                if (compsognato.estaVivo()) {
+                    return true;
+                }
             }
         }
-    }
 
-    grade[personagem.getLinha()][personagem.getColuna()] = null;
-    personagem.moverPara(novaLinha, novaColuna);
-    grade[novaLinha][novaColuna] = personagem;
-    return true;
-}
+        grade[personagem.getLinha()][personagem.getColuna()] = null;
+        personagem.moverPara(novaLinha, novaColuna);
+        grade[novaLinha][novaColuna] = personagem;
+        return true;
+    }
 
     public void moverDinossauros() {
         Dinossauro[][] copia = new Dinossauro[tamanho][tamanho];
@@ -242,47 +245,55 @@ public class Mapa {
     }
 
     protected boolean estaNaLinhaDeVisao(int linha, int coluna) {
-    int linhaPersonagem = personagem.getLinha();
-    int colunaPersonagem = personagem.getColuna();
+        int linhaPersonagem = personagem.getLinha();
+        int colunaPersonagem = personagem.getColuna();
 
-    if (linha == linhaPersonagem) {
-        int passo = coluna > colunaPersonagem ? 1 : -1;
-        for (int c = colunaPersonagem + passo; c != coluna; c += passo) {
-            if (bloqueiaVisao(linha, c)) {
-                return false;
+        if (linha == linhaPersonagem) {
+            int passo = coluna > colunaPersonagem ? 1 : -1;
+            for (int c = colunaPersonagem + passo; c != coluna; c += passo) {
+                if (bloqueiaVisao(linha, c)) {
+                    return false;
+                }
             }
+            return true;
         }
-        return true;
+
+        if (coluna == colunaPersonagem) {
+            int passo = linha > linhaPersonagem ? 1 : -1;
+            for (int l = linhaPersonagem + passo; l != linha; l += passo) {
+                if (bloqueiaVisao(l, coluna)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        return false;
     }
 
-    if (coluna == colunaPersonagem) {
-        int passo = linha > linhaPersonagem ? 1 : -1;
-        for (int l = linhaPersonagem + passo; l != linha; l += passo) {
-            if (bloqueiaVisao(l, coluna)) {
-                return false;
-            }
-        }
-        return true;
+    private boolean bloqueiaVisao(int linha, int coluna) {
+        return (grade[linha][coluna] instanceof Parede) || dinossauros[linha][coluna] != null;
     }
 
-    return false;
-}
-
-/**
- * Indica se a posição bloqueia a linha de visão do jogador.
- * Paredes e dinossauros bloqueiam; caixas de suprimentos não bloqueiam.
- */
-private boolean bloqueiaVisao(int linha, int coluna) {
-    return (grade[linha][coluna] instanceof Parede) || dinossauros[linha][coluna] != null;
-}
-
-    /**
-     * Indica se o dinossauro na posição informada deveria ser exibido ao
-     * jogador — seja porque está na linha de visão, seja porque o modo
-     * debug está ativo. Usado tanto pelo terminal quanto pela UI gráfica.
-     */
     public boolean dinossauroVisivel(int linha, int coluna, boolean debug) {
         return debug || estaNaLinhaDeVisao(linha, coluna);
+    }
+
+    /**
+     * Indica se existe algum dinossauro vivo na linha de visão atual do
+     * jogador, independente do modo debug. Usado para acionar alertas
+     * visuais de perigo próximo na interface gráfica.
+     */
+    public boolean existeDinossauroNaLinhaDeVisao() {
+        for (int l = 0; l < tamanho; l++) {
+            for (int c = 0; c < tamanho; c++) {
+                Dinossauro dino = dinossauros[l][c];
+                if (dino != null && dino.estaVivo() && estaNaLinhaDeVisao(l, c)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public int getTamanho() {

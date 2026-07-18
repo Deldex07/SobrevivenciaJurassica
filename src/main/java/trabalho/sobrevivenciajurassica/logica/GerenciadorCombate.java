@@ -1,7 +1,6 @@
 package trabalho.sobrevivenciajurassica.logica;
 
-import java.util.Scanner;
-import java.util.InputMismatchException;
+import trabalho.sobrevivenciajurassica.interfaces.EntradaCombate;
 import trabalho.sobrevivenciajurassica.entidades.Dinossauro;
 import trabalho.sobrevivenciajurassica.entidades.Personagem;
 import trabalho.sobrevivenciajurassica.entidades.TiranossauroRex;
@@ -15,9 +14,10 @@ import trabalho.sobrevivenciajurassica.itens.Inventario;
  */
 
 public class GerenciadorCombate {
-    private final Scanner scanner;
-    public GerenciadorCombate(Scanner scanner) {
-        this.scanner = scanner;
+    private final EntradaCombate entradaCombate;
+
+    public GerenciadorCombate(EntradaCombate entradaCombate) {
+        this.entradaCombate = entradaCombate;
     }
 
     public boolean iniciarCombate(Personagem jogador, Dinossauro inimigo) {
@@ -69,62 +69,29 @@ private boolean turnoJogador(Personagem jogador, Dinossauro inimigo) {
     boolean temDardos = inventario.temDardos();
     boolean temKit = inventario.temKitMedico();
 
-    System.out.println();
-    System.out.println("Sua vida: " + jogador.getSaude());
-    System.out.println("Vida do inimigo: " + inimigo.getSaude());
-    System.out.println();
-    System.out.println(temBastao ? "1 - Bastão Elétrico" : "1 - Soco");
-    if (temDardos) System.out.println("2 - Dardos Tranquilizantes");
-    if (temKit) System.out.println("3 - Usar Kit Médico");
-    System.out.println("4 - Fugir");
+        System.out.println();
+        System.out.println("Sua vida: " + jogador.getSaude());
+        System.out.println("Vida do inimigo: " + inimigo.getSaude());
+        System.out.println();
 
-    int opcao = lerOpcaoValida(temDardos, temKit);
+        int opcao = entradaCombate.escolherAcao(temDardos, temKit, temBastao);
 
-    switch (opcao) {
-        case 1:
-            if (temBastao) atacarComArma(inventario.getBastao(), inimigo);
-            else atacarSoco(inimigo);
-            break;
-        case 2:
-            atacarComDardos(inventario.getDardos(), inimigo);
-            break;
-        case 3:
-            jogador.usarKitMedico();
-            break;
-        case 4:
-            return fugir();
-    }
-    return false;
-}
-
-/**
- * Lê repetidamente até que o jogador informe uma opção válida e
- * disponível no momento (respeitando se ele possui dardos/kit médico).
- * Trata entradas não numéricas sem encerrar o programa.
- */
-private int lerOpcaoValida(boolean temDardos, boolean temKit) {
-    while (true) {
-        System.out.print("Escolha: ");
-        int opcao;
-        try {
-            opcao = scanner.nextInt();
-        } catch (InputMismatchException e) {
-            scanner.next(); // descarta o token inválido
-            System.out.println("Entrada inválida, digite um número.");
-            continue;
+        switch (opcao) {
+            case 1:
+                if (temBastao) atacarComArma(inventario.getBastao(), inimigo);
+                else atacarSoco(inimigo);
+                break;
+            case 2:
+                atacarComDardos(inventario.getDardos(), inimigo);
+                break;
+            case 3:
+                jogador.usarKitMedico();
+                break;
+            case 4:
+                return fugir();
         }
-
-        boolean valida = opcao == 1
-                || (opcao == 2 && temDardos)
-                || (opcao == 3 && temKit)
-                || opcao == 4;
-
-        if (valida) {
-            return opcao;
-        }
-        System.out.println("Opção inválida.");
+        return false;
     }
-}
 
     private void atacarSoco(Dinossauro inimigo) {
 
