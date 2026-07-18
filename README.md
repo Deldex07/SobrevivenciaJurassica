@@ -41,7 +41,7 @@ A dificuldade escolhida influencia a percepção dos inimigos e o tamanho do map
 
 ## Requisitos
 
-- Java 21 ou superior
+- Java 25 ou superior
 - Maven 3.6 ou superior
 - IDE recomendada: Visual Studio Code com a extensão Java Extension Pack
 
