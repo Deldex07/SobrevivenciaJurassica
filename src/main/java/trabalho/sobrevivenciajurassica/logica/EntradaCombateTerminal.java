@@ -2,6 +2,8 @@ package trabalho.sobrevivenciajurassica.logica;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import trabalho.sobrevivenciajurassica.entidades.Dinossauro;
+import trabalho.sobrevivenciajurassica.entidades.Personagem;
 import trabalho.sobrevivenciajurassica.interfaces.EntradaCombate;
 
 public class EntradaCombateTerminal implements EntradaCombate {
@@ -12,7 +14,8 @@ public class EntradaCombateTerminal implements EntradaCombate {
     }
 
     @Override
-    public int escolherAcao(boolean temDardos, boolean temKit, boolean temBastao) {
+    public int escolherAcao(Personagem jogador, Dinossauro inimigo,
+                             boolean temDardos, boolean temKit, boolean temBastao) {
         System.out.println(temBastao ? "1 - Bastão Elétrico" : "1 - Soco");
         if (temDardos) System.out.println("2 - Dardos Tranquilizantes");
         if (temKit) System.out.println("3 - Usar Kit Médico");

@@ -73,14 +73,15 @@ public class GerenciadorJogoGrafico implements KeyListener {
         janela.setJogador(jogador);
         janela.atualizarVida(jogador.getSaude(), jogador.getSaudeMaxima());
         janela.atualizarInventario();
-        janela.setAlertaVisivel(mapa.existeDinossauroNaLinhaDeVisao());
+        janela.atualizarAlertas(mapa.dinossaurosNaLinhaDeVisao());
     }
 
     private void atualizarTela() {
         janela.atualizarVida(jogador.getSaude(), jogador.getSaudeMaxima());
         janela.atualizarInventario();
-        janela.setAlertaVisivel(mapa.existeDinossauroNaLinhaDeVisao());
+        janela.atualizarAlertas(mapa.dinossaurosNaLinhaDeVisao());
         janela.getMapaPanel().repaint();
+        janela.mostrarJogo(); // garante retorno ao mapa após qualquer combate
     }
 
     @Override

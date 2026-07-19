@@ -1,47 +1,41 @@
 package trabalho.sobrevivenciajurassica.ui.controle;
 
-import java.awt.Component;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.JOptionPane;
+import java.awt.SecondaryLoop;
+import java.awt.Toolkit;
+import trabalho.sobrevivenciajurassica.entidades.Dinossauro;
+import trabalho.sobrevivenciajurassica.entidades.Personagem;
 import trabalho.sobrevivenciajurassica.interfaces.EntradaCombate;
+import trabalho.sobrevivenciajurassica.ui.componentes.JanelaJogo;
 
+/**
+ * Implementação gráfica de EntradaCombate. Em vez de abrir um diálogo
+ * separado, exibe a tela de combate na própria janela do jogo e usa
+ * um SecondaryLoop para aguardar a escolha do jogador sem travar a
+ * interface gráfica — o mesmo mecanismo usado internamente pelo
+ * JOptionPane, só que sem criar nenhuma janela nova.
+ */
 public class EntradaCombateGrafica implements EntradaCombate {
 
-    private final Component parent;
+    private final JanelaJogo janela;
+    private int resultado;
 
-    public EntradaCombateGrafica(Component parent) {
-        this.parent = parent;
+    public EntradaCombateGrafica(JanelaJogo janela) {
+        this.janela = janela;
     }
 
     @Override
-    public int escolherAcao(boolean temDardos, boolean temKit, boolean temBastao) {
-        List<Integer> codigos = new ArrayList<>();
-        List<String> rotulos = new ArrayList<>();
+    public int escolherAcao(Personagem jogador, Dinossauro inimigo,
+                             boolean temDardos, boolean temKit, boolean temBastao) {
 
-        codigos.add(1);
-        rotulos.add(temBastao ? "Bastão Elétrico" : "Soco");
+        SecondaryLoop loop = Toolkit.getDefaultToolkit().getSystemEventQueue().createSecondaryLoop();
 
-        if (temDardos) {
-            codigos.add(2);
-            rotulos.add("Dardos Tranquilizantes");
-        }
-        if (temKit) {
-            codigos.add(3);
-            rotulos.add("Usar Kit Médico");
-        }
-        codigos.add(4);
-        rotulos.add("Fugir");
+        janela.mostrarCombate(inimigo, temDardos, temKit, temBastao, codigo -> {
+            resultado = codigo;
+            loop.exit();
+        });
 
-        Object[] opcoes = rotulos.toArray();
-        int indice = JOptionPane.showOptionDialog(parent,
-                "Escolha sua ação:", "Combate",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
-                null, opcoes, opcoes[0]);
+        loop.enter();
 
-        if (indice < 0) {
-            return 4; // fechar o diálogo (Esc/X) equivale a tentar fugir
-        }
-        return codigos.get(indice);
+        return resultado;
     }
 }

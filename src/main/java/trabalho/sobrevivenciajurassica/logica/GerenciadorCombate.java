@@ -9,10 +9,6 @@ import trabalho.sobrevivenciajurassica.itens.Arma;
 import trabalho.sobrevivenciajurassica.itens.Dardos;
 import trabalho.sobrevivenciajurassica.itens.Inventario;
 
-/**
- * Classe responsável por gerenciar o combate entre o jogador e os dinossauros.
- */
-
 public class GerenciadorCombate {
     private final EntradaCombate entradaCombate;
 
@@ -21,60 +17,60 @@ public class GerenciadorCombate {
     }
 
     public boolean iniciarCombate(Personagem jogador, Dinossauro inimigo) {
-    return iniciarCombate(jogador, inimigo, false);
-}
+        return iniciarCombate(jogador, inimigo, false);
+    }
 
-public boolean iniciarCombate(Personagem jogador, Dinossauro inimigo, boolean inimigoAtacaPrimeiro) {
+    public boolean iniciarCombate(Personagem jogador, Dinossauro inimigo, boolean inimigoAtacaPrimeiro) {
 
-    System.out.println();
-    System.out.println("================================");
-    System.out.println("Combate iniciado!");
-    System.out.println("Inimigo: " + inimigo.getClass().getSimpleName());
-    System.out.println("================================");
-
-    if (inimigoAtacaPrimeiro) {
         System.out.println();
-        System.out.println("O dinossauro te encontrou e ataca primeiro!");
-        turnoDinossauro(jogador, inimigo);
-        if (!jogador.estaVivo()) {
-            System.out.println("Você morreu.");
-            return false;
+        System.out.println("================================");
+        System.out.println("Combate iniciado!");
+        System.out.println("Inimigo: " + inimigo.getClass().getSimpleName());
+        System.out.println("================================");
+
+        if (inimigoAtacaPrimeiro) {
+            System.out.println();
+            System.out.println("O dinossauro te encontrou e ataca primeiro!");
+            turnoDinossauro(jogador, inimigo);
+            if (!jogador.estaVivo()) {
+                System.out.println("Você morreu.");
+                return false;
+            }
         }
+
+        while (jogador.estaVivo() && inimigo.estaVivo()) {
+
+            if (turnoJogador(jogador, inimigo)) {
+                System.out.println("Você conseguiu fugir!");
+                return true;
+            }
+
+            if (!inimigo.estaVivo()) {
+                System.out.println("Você derrotou o dinossauro!");
+                return true;
+            }
+
+            turnoDinossauro(jogador, inimigo);
+            if (!jogador.estaVivo()) {
+                System.out.println("Você morreu.");
+                return false;
+            }
+        }
+        return jogador.estaVivo();
     }
 
-    while (jogador.estaVivo() && inimigo.estaVivo()) {
-
-        if (turnoJogador(jogador, inimigo)) {
-            System.out.println("Você conseguiu fugir!");
-            return true;
-        }
-
-        if (!inimigo.estaVivo()) {
-            System.out.println("Você derrotou o dinossauro!");
-            return true;
-        }
-
-        turnoDinossauro(jogador, inimigo);
-        if (!jogador.estaVivo()) {
-            System.out.println("Você morreu.");
-            return false;
-        }
-    }
-    return jogador.estaVivo();
-}
-
-private boolean turnoJogador(Personagem jogador, Dinossauro inimigo) {
-    Inventario inventario = jogador.getInventario();
-    boolean temBastao = inventario.temBastao();
-    boolean temDardos = inventario.temDardos();
-    boolean temKit = inventario.temKitMedico();
+    private boolean turnoJogador(Personagem jogador, Dinossauro inimigo) {
+        Inventario inventario = jogador.getInventario();
+        boolean temBastao = inventario.temBastao();
+        boolean temDardos = inventario.temDardos();
+        boolean temKit = inventario.temKitMedico();
 
         System.out.println();
         System.out.println("Sua vida: " + jogador.getSaude());
         System.out.println("Vida do inimigo: " + inimigo.getSaude());
         System.out.println();
 
-        int opcao = entradaCombate.escolherAcao(temDardos, temKit, temBastao);
+        int opcao = entradaCombate.escolherAcao(jogador, inimigo, temDardos, temKit, temBastao);
 
         switch (opcao) {
             case 1:
@@ -94,7 +90,6 @@ private boolean turnoJogador(Personagem jogador, Dinossauro inimigo) {
     }
 
     private void atacarSoco(Dinossauro inimigo) {
-
         if (inimigo instanceof TiranossauroRex) {
             System.out.println("Suas mãos nuas não fazem nenhum efeito contra o Tiranossauro Rex!");
             return;
@@ -133,7 +128,6 @@ private boolean turnoJogador(Personagem jogador, Dinossauro inimigo) {
             return;
         }
         atacarComArma(dardos, inimigo);
-
     }
 
     private boolean fugir() {

@@ -1,15 +1,12 @@
 package trabalho.sobrevivenciajurassica.logica;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import trabalho.sobrevivenciajurassica.entidades.*;
 import trabalho.sobrevivenciajurassica.interfaces.EntradaCombate;
 import trabalho.sobrevivenciajurassica.itens.ConteudoCaixa;
 
-/**
- * Classe que representa o mapa do jogo, incluindo a grade de elementos, os dinossauros e o personagem. 
- * Ela é responsável por gerar o mapa, mover os dinossauros e o personagem, e verificar as condições de vitória e derrota.
- * Mapa
- */
 public class Mapa {
     private final int tamanho;
     protected final ElementoMapa[][] grade;
@@ -144,7 +141,7 @@ public class Mapa {
         if (dino != null) {
             boolean sobreviveu = gerenciadorCombate.iniciarCombate(personagem, dino);
             if (!sobreviveu) {
-                return false;
+                return true;
             }
             if (dino.estaVivo()) {
                 return true;
@@ -163,7 +160,7 @@ public class Mapa {
                 Compsognato compsognato = new Compsognato(1, novaLinha, novaColuna, 'C');
                 boolean sobreviveuSurpresa = gerenciadorCombate.iniciarCombate(personagem, compsognato);
                 if (!sobreviveuSurpresa) {
-                    return false;
+                    return true;
                 }
                 if (compsognato.estaVivo()) {
                     return true;
@@ -280,20 +277,25 @@ public class Mapa {
     }
 
     /**
-     * Indica se existe algum dinossauro vivo na linha de visão atual do
-     * jogador, independente do modo debug. Usado para acionar alertas
-     * visuais de perigo próximo na interface gráfica.
+     * Retorna todos os dinossauros vivos atualmente na linha de visão
+     * do jogador, independente do modo debug. Usado para acionar os
+     * alertas visuais de perigo próximo na interface gráfica.
      */
-    public boolean existeDinossauroNaLinhaDeVisao() {
+    public List<Dinossauro> dinossaurosNaLinhaDeVisao() {
+        List<Dinossauro> visiveis = new ArrayList<>();
         for (int l = 0; l < tamanho; l++) {
             for (int c = 0; c < tamanho; c++) {
                 Dinossauro dino = dinossauros[l][c];
                 if (dino != null && dino.estaVivo() && estaNaLinhaDeVisao(l, c)) {
-                    return true;
+                    visiveis.add(dino);
                 }
             }
         }
-        return false;
+        return visiveis;
+    }
+
+    public boolean existeDinossauroNaLinhaDeVisao() {
+        return !dinossaurosNaLinhaDeVisao().isEmpty();
     }
 
     public int getTamanho() {
